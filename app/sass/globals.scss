@@ -1,0 +1,150 @@
+@use "sass:math";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@function rem($size) {
+	@if (math.is-unitless($size)) {
+		@return math.div($size, 16) + rem;
+	} @else {
+		@error 'Please provide a unitless value for the rem function';
+	}
+}
+
+@layer utilities {
+	body {
+		background-color: black;
+		&::-webkit-scrollbar {
+			width: rem(8);
+		}
+		&::-webkit-scrollbar-thumb {
+			background-color: #45484dc9;
+			&:hover {
+				background: linear-gradient(to top, #101113, #90929673);
+			}
+			border-radius: rem(20);
+			transition: 0.3s ease;
+		}
+	}
+	p {
+		color: #909296;
+		font-weight: 400;
+	}
+
+	img {
+		display: block;
+		height: auto;
+	}
+
+	h1,
+	h2,
+	h3 {
+		color: white;
+	}
+
+	header {
+		background-color: rgba(0, 0, 0, 0.541);
+		backdrop-filter: blur(5px);
+		filter: saturate(5px);
+	}
+
+	li a {
+		font-weight: 500;
+	}
+
+	.card {
+		background: linear-gradient(180deg, #101113 0%, rgba(16, 17, 19, 0) 100%);
+		background-color: black;
+		border-radius: rem(17);
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+		padding: 1px;
+		margin-inline: auto;
+
+		&::before {
+			content: "";
+			width: rem(250);
+			height: 150%;
+			position: absolute;
+			top: 100px;
+			transform-origin: top;
+			box-shadow: 5px 1px 0px 10px rgba(223, 105, 8, 0.103);
+			background: linear-gradient(
+				180deg,
+				rgba(16, 17, 19, 0) 0%,
+				rgb(25, 29, 34) 100%
+			);
+			animation: rotate 5s linear infinite;
+			border-radius: rem(17);
+		}
+
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 2.5px;
+			background: inherit;
+			border-radius: rem(17);
+		}
+		.card-inner {
+			width: 100%;
+			height: 100%;
+			z-index: 10;
+		}
+	}
+
+	@keyframes rotate {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	.my-max {
+		width: min(100% - #{rem(30)}, #{rem(1200)});
+		margin-inline: auto;
+	}
+	.my-max2 {
+		width: min(100% - #{rem(30)}, #{rem(1000)});
+		margin-inline: auto;
+	}
+
+	.hero {
+		background-image: url("../../public/hero.svg");
+		background-position: center center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		width: 100%;
+		// height: rem(576);
+		height: 100vh;
+		background-color: black;
+		@media (max-width: 62em) {
+			background-position: 25%;
+		}
+	}
+	.signupPage {
+		background: linear-gradient(to left, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3)),
+			url("../../public/signupBackground.svg");
+		background-position: center center;
+		background-size: cover;
+		background-repeat: no-repeat;
+		width: 100%;
+		background-color: black;
+		@media (max-width: 62em) {
+			background-position-x: right;
+		}
+	}
+
+	.my-trans {
+		transition: 0.6s ease-in-out;
+	}
+	.my-trans-visible {
+		transition: 0.2s ease-out;
+		transition-delay: 0.1s;
+	}
+}
