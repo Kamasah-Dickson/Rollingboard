@@ -5,8 +5,9 @@ import { MdClose } from "react-icons/md";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useRouter } from "next/router";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 import {
 	createUserWithEmailAndPassword,
@@ -21,12 +22,13 @@ type Inputs = {
 };
 
 const Signup = () => {
-	const router = useRouter();
+	// const [disable, setDisable] = useState(true);
 
+	const router = useRouter();
 	const {
 		register,
-		formState: { errors },
-		// getValues,
+		formState: { errors, isSubmitting },
+		getValues,
 		handleSubmit,
 	} = useForm<Inputs>({
 		defaultValues: {
@@ -35,9 +37,34 @@ const Signup = () => {
 		},
 	});
 
-	const isDisabled = Boolean(errors?.email) || Boolean(errors?.password);
-	// !Boolean(getValues("password")) ||
-	// !Boolean(getValues("email"));
+	// let isDisabled = Boolean(errors?.email) || Boolean(errors?.password);
+
+	!Boolean(getValues("password")) || !Boolean(getValues("email"));
+
+	function handleCreateUserError(errorCode: string) {
+		switch (errorCode) {
+			case "auth/invalid-email":
+				toast.error("Invalid email. Please enter a valid email address.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/email-already-in-use":
+				toast.error("The email address is already in use by another account.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/weak-password":
+				toast.error("The password must be at least 6 characters long.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			default:
+				toast.error("An error occurred while creating the user.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+		}
+	}
 
 	const onSubmitSignup: SubmitHandler<Inputs> = async (data) => {
 		try {
@@ -47,11 +74,28 @@ const Signup = () => {
 				data?.password
 			);
 			const user = userCredential?.user;
+			const userName = (user?.email as string).slice(
+				0,
+				user?.email?.indexOf("@")
+			);
+
+			userName &&
+				toast.success(`Welcome ${userName}`, {
+					position: toast.POSITION.TOP_CENTER,
+				});
+
 			if (user) {
-				redirect("/rollingboard");
+				const timeout = setTimeout(() => {
+					router.push("/rollingboard");
+				}, 2000);
+
+				return () => {
+					clearTimeout(timeout);
+				};
 			}
 		} catch (error) {
-			console.log(error);
+			const errorCode = (error as any).code;
+			handleCreateUserError(errorCode);
 		}
 	};
 
@@ -84,6 +128,7 @@ const Signup = () => {
 				</div>
 				<div>
 					<form
+						method="post"
 						onSubmit={handleSubmit(onSubmitSignup)}
 						className="md:max-md mx-auto max-w-md  rounded-xl border border-[#68686896] bg-[#101113] p-5 text-[#909296] shadow-md"
 					>
@@ -150,11 +195,9 @@ const Signup = () => {
 								</Link>
 							</span>
 							<button
-								className={` mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] ${
-									!isDisabled && "active:scale-[1.03]"
-								} disabled:bg-[#80808081] `}
+								disabled={isSubmitting}
+								className={` mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] disabled:bg-[#80808081] `}
 								type="submit"
-								disabled={isDisabled}
 							>
 								Create an account
 							</button>
