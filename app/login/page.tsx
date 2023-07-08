@@ -5,12 +5,15 @@ import { MdClose } from "react-icons/md";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { auth } from "../../configs/firebase";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
-// import {
-// 	signInWithEmailAndPassword,
-// 	GoogleAuthProvider,
-// 	signInWithPopup,
-// } from "firebase/auth";
+import {
+	signInWithEmailAndPassword,
+	GoogleAuthProvider,
+	signInWithPopup,
+} from "firebase/auth";
 
 type Inputs = {
 	email: string;
@@ -18,11 +21,11 @@ type Inputs = {
 };
 
 const Login = () => {
+	const router = useRouter();
 	const {
 		register,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 		handleSubmit,
-		getValues,
 	} = useForm<Inputs>({
 		defaultValues: {
 			email: "ee",
@@ -30,19 +33,80 @@ const Login = () => {
 		},
 	});
 
-	const isDisabled =
-		Boolean(errors?.email) ||
-		Boolean(errors?.password) ||
-		!Boolean(getValues("password")) ||
-		!Boolean(getValues("email"));
+	function handleCreateUserError(errorCode: string) {
+		switch (errorCode) {
+			case "auth/invalid-email":
+				toast.error("Invalid email. Please enter a valid email address.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/email-already-in-use":
+				toast.error("The email address is already in use by another account.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/weak-password":
+				toast.error("The password must be at least 6 characters long.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			default:
+				toast.error("An error occurred while creating the user.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+		}
+	}
 
-	const onSubmitSignup: SubmitHandler<Inputs> = (data) => {
-		console.log(data);
+	const loginUsingGoogle = async () => {
+		const provider = new GoogleAuthProvider();
+		const results = await signInWithPopup(auth, provider);
+		const user = results?.user;
+		const userDisplayName = results?.user?.displayName;
+		userDisplayName &&
+			toast.success(`Welcome ${userDisplayName}`, {
+				position: toast.POSITION.TOP_CENTER,
+			});
+
+		if (user) {
+			const timeout = setTimeout(() => {
+				router.push("/rollingboard");
+			}, 1000);
+
+			return () => {
+				clearTimeout(timeout);
+			};
+		}
 	};
 
-	// const  SignUserWithEmail = async()=> {
-	// 	// const user = await signInWithEmailAndPassword()
-	// }
+	const onSubmitSignup: SubmitHandler<Inputs> = async (data) => {
+		try {
+			const userCredentials = await signInWithEmailAndPassword(
+				auth,
+				data?.email,
+				data?.password
+			);
+			const user = userCredentials?.user;
+			const userName = user?.email?.slice(0, user?.email?.indexOf("@"));
+			userName &&
+				toast.success(`Welcome ${userName}`, {
+					position: toast.POSITION.TOP_CENTER,
+				});
+
+			if (user) {
+				const timeout = setTimeout(() => {
+					router.push("/rollingboard");
+				}, 1000);
+
+				return () => {
+					clearTimeout(timeout);
+				};
+			}
+		} catch (error) {
+			const errorCode = (error as any).code;
+			handleCreateUserError(errorCode);
+		}
+	};
 
 	return (
 		<div className="signupPage mt-14 md:h-screen">
@@ -141,19 +205,19 @@ const Login = () => {
 								</Link>
 							</span>
 							<button
-								className={` mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] ${
-									!isDisabled && "active:scale-[1.03]"
-								} disabled:bg-[#80808081] `}
+								disabled={isSubmitting}
+								className={` mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] disabled:bg-[#80808081] `}
 								type="submit"
-								disabled={isDisabled}
 							>
-								Login
+								Sign In
 							</button>
 							<button
-								className=" mt-6 flex flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black active:scale-[1.03] disabled:bg-[#68686896]"
-								type="submit"
+								onClick={loginUsingGoogle}
+								disabled={isSubmitting}
+								className=" mt-6 flex disabled:bg-[#80808081] disabled:text-white flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black active:scale-[1.03] "
+								type="button"
 							>
-								Signup with Google <FcGoogle size={20} />
+								Sign in with Google <FcGoogle size={20} />
 							</button>
 						</div>
 					</form>

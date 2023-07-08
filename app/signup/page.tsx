@@ -7,7 +7,6 @@ import { FcGoogle } from "react-icons/fc";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useState } from "react";
 
 import {
 	createUserWithEmailAndPassword,
@@ -22,13 +21,10 @@ type Inputs = {
 };
 
 const Signup = () => {
-	// const [disable, setDisable] = useState(true);
-
 	const router = useRouter();
 	const {
 		register,
 		formState: { errors, isSubmitting },
-		getValues,
 		handleSubmit,
 	} = useForm<Inputs>({
 		defaultValues: {
@@ -36,10 +32,6 @@ const Signup = () => {
 			password: "",
 		},
 	});
-
-	// let isDisabled = Boolean(errors?.email) || Boolean(errors?.password);
-
-	!Boolean(getValues("password")) || !Boolean(getValues("email"));
 
 	function handleCreateUserError(errorCode: string) {
 		switch (errorCode) {
@@ -66,6 +58,27 @@ const Signup = () => {
 		}
 	}
 
+	const signupUsingGoogle = async () => {
+		const provider = new GoogleAuthProvider();
+		const results = await signInWithPopup(auth, provider);
+		const user = results?.user;
+		const userDisplayName = results?.user?.displayName;
+		userDisplayName &&
+			toast.success(`Welcome ${userDisplayName}`, {
+				position: toast.POSITION.TOP_CENTER,
+			});
+
+		if (user) {
+			const timeout = setTimeout(() => {
+				router.push("/rollingboard");
+			}, 1000);
+
+			return () => {
+				clearTimeout(timeout);
+			};
+		}
+	};
+
 	const onSubmitSignup: SubmitHandler<Inputs> = async (data) => {
 		try {
 			const userCredential = await createUserWithEmailAndPassword(
@@ -87,7 +100,7 @@ const Signup = () => {
 			if (user) {
 				const timeout = setTimeout(() => {
 					router.push("/rollingboard");
-				}, 2000);
+				}, 1000);
 
 				return () => {
 					clearTimeout(timeout);
@@ -202,8 +215,10 @@ const Signup = () => {
 								Create an account
 							</button>
 							<button
-								className=" mt-6 flex flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black active:scale-[1.03] disabled:bg-[#68686896]"
-								type="submit"
+								onClick={signupUsingGoogle}
+								disabled={isSubmitting}
+								className=" mt-6 flex disabled:bg-[#80808081] flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black active:scale-[1.03] "
+								type="button"
 							>
 								Signup with Google <FcGoogle size={20} />
 							</button>
