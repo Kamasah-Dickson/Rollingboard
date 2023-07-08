@@ -128,7 +128,7 @@ const About = () => {
 					</div>
 				</div>
 
-				<div className="flex flex-col  items-center justify-center gap-16 pt-28 md:flex-row ">
+				<div className="flex flex-col pb-20 items-center justify-center gap-16 pt-28 md:flex-row ">
 					<div className="text-center md:text-left">
 						<span className="flex items-center justify-center gap-3 md:justify-start">
 							<div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#15AABF] p-2">
