@@ -4,10 +4,22 @@ import Image from "next/image";
 import logo from "../public/Rollingboard.svg";
 import Link from "next/link";
 import { MdClose, MdMenu } from "react-icons/md";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { auth } from "../configs/firebase";
 
 const Header = () => {
 	const [showNav, setShowNav] = useState(false);
+	const [currentUser, setCurrentUser] = useState<null | any>(null);
+
+	useEffect(() => {
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			setCurrentUser(user);
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
 	return (
 		<header
@@ -32,76 +44,78 @@ const Header = () => {
 					} my-trans-visible fixed right-0 top-0  h-screen w-full select-none bg-gradient-to-r from-[#000000d8]  md:hidden`}
 				></div>
 
-				<ul
-					className={` ${
-						showNav
-							? " translate-x-[0%] "
-							: " translate-x-[100%] md:translate-x-[0%] "
-					}  my-trans text-md text-md absolute   right-0 top-0 z-20 flex  h-screen w-[70%] flex-col items-center justify-center gap-5 bg-[#000000] p-2 text-[#909296] md:relative md:h-full md:flex-row md:bg-transparent`}
-				>
-					<MdClose
-						color="white"
-						size={25}
-						onClick={() => setShowNav(false)}
-						className={`${
-							!showNav && "hidden"
-						} absolute right-5 top-5 cursor-pointer md:hidden`}
-					/>
-					<li>
-						<Link
-							className="transition-all hover:text-white"
-							href={"/projects"}
-						>
-							Projects
-						</Link>
-					</li>
-					<li>
-						<Link className="transition-all hover:text-white" href={"/profile"}>
-							Profile
-						</Link>
-					</li>
-					<li>
-						<Link className="transition-all hover:text-white" href={"/search"}>
-							Search
-						</Link>
-					</li>
-
-					<li>
-						<Link className="transition-all hover:text-white" href={"/about"}>
-							About
-						</Link>
-					</li>
-					<li>
-						<div className="flex flex-col items-center justify-center gap-5 md:hidden">
-							<Link href={"/login"} className="cursor-pointer hover:text-white">
-								Login
-							</Link>
+				{currentUser && (
+					<ul
+						className={` ${
+							showNav
+								? " translate-x-[0%] "
+								: " translate-x-[100%] md:translate-x-[0%] "
+						}  my-trans text-md text-md absolute   right-0 top-0 z-20 flex  h-screen w-[70%] flex-col items-center ${
+							currentUser ? "justify-center md:justify-end" : "justify-center"
+						} gap-5 bg-[#000000] p-2 text-[#909296] md:relative md:h-full md:flex-row md:bg-transparent`}
+					>
+						<MdClose
+							color="white"
+							size={25}
+							onClick={() => setShowNav(false)}
+							className={`${
+								!showNav && "hidden"
+							} absolute right-5 top-5 cursor-pointer md:hidden`}
+						/>
+						<li>
 							<Link
-								href={"/signup"}
-								className="mt-3 cursor-pointer rounded-md bg-white px-4 py-1 text-black transition-all hover:bg-[#8010adec] hover:text-white active:scale-[1.02]"
+								className="transition-all hover:text-white"
+								href={"/projects"}
 							>
-								Signup
+								Projects
 							</Link>
-						</div>
-					</li>
-				</ul>
+						</li>
+						<li>
+							<Link
+								className="transition-all hover:text-white"
+								href={"/profile"}
+							>
+								Profile
+							</Link>
+						</li>
 
-				<div className="hidden items-center justify-center gap-5 md:flex">
-					<Link
-						href={"/login"}
-						type="button"
-						className="cursor-pointer text-white"
-					>
-						Login
-					</Link>
-					<Link
-						href={"/signup"}
-						className="cursor-pointer rounded-lg bg-white px-3 py-1 text-black active:scale-[1.01]"
-						type="button"
-					>
-						Signup
-					</Link>
-				</div>
+						<li>
+							<div className="flex flex-col items-center justify-center gap-5 md:hidden">
+								<Link
+									href={"/login"}
+									className="cursor-pointer hover:text-white"
+								>
+									Login
+								</Link>
+								<Link
+									href={"/signup"}
+									className="mt-3 cursor-pointer rounded-md bg-white px-4 py-1 text-black transition-all hover:bg-[#8010adec] hover:text-white active:scale-[1.02]"
+								>
+									Signup
+								</Link>
+							</div>
+						</li>
+					</ul>
+				)}
+
+				{!currentUser && (
+					<div className="hidden items-center justify-center gap-5 md:flex">
+						<Link
+							href={"/login"}
+							type="button"
+							className="cursor-pointer text-white"
+						>
+							Login
+						</Link>
+						<Link
+							href={"/signup"}
+							className="cursor-pointer rounded-lg bg-white px-3 py-1 text-black active:scale-[1.01]"
+							type="button"
+						>
+							Signup
+						</Link>
+					</div>
+				)}
 				<MdMenu
 					onClick={() => setShowNav(true)}
 					cursor={"pointer"}
