@@ -1,7 +1,6 @@
 import Header from "@/components/Header";
 import "./sass/globals.scss";
 import { Open_Sans } from "next/font/google";
-import Footer from "@/components/Footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -26,7 +25,6 @@ export default function RootLayout({
 				<Header />
 				{children}
 				<ToastContainer />
-				<Footer />
 			</body>
 		</html>
 	);
