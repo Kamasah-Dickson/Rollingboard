@@ -1,5 +1,7 @@
 import Footer from "@/components/Footer";
 import { MdSearch, MdClose } from "react-icons/md";
+import { AiOutlinePlus } from "react-icons/ai";
+
 const RollingBoard = () => {
 	return (
 		<div className="h-screen flex flex-col">
@@ -30,7 +32,7 @@ const RollingBoard = () => {
 								<h3 className="my-2 text-center text-lg font-medium md:text-xl">
 									Integrate
 								</h3>
-								<p className="text-center text-md font-normal text-[#909296]">
+								<p className="text-center text-sm font-normal text-[#909296]">
 									The ability to quickly set up and customize workflows for just
 									about anything.
 								</p>
@@ -49,6 +51,19 @@ const RollingBoard = () => {
 									Edit
 								</button>
 							</div>
+						</div>
+					</div>
+					<div className="projectCard max-w-xl">
+						<div className="card-inner">
+							<button
+								type="button"
+								className=" active:scale-[1.02] gap-2 cursor-pointer h-full mx-auto flex w-full items-center justify-center rounded-[17px] "
+							>
+								<AiOutlinePlus size={35} color="white" />
+								<p className="text-center text-xl font-medium text-white">
+									Create Board
+								</p>
+							</button>
 						</div>
 					</div>
 				</div>
