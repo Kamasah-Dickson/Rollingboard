@@ -6,10 +6,13 @@ import Link from "next/link";
 import { MdClose, MdMenu } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { auth } from "../configs/firebase";
+import { CgProfile } from "react-icons/cg";
+import UserProfile from "./UserProfile";
 
 const Header = () => {
 	const [showNav, setShowNav] = useState(false);
 	const [currentUser, setCurrentUser] = useState<null | any>(null);
+	const [showProfile, setShowProfile] = useState(false);
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -65,18 +68,18 @@ const Header = () => {
 						<li>
 							<Link
 								className="transition-all hover:text-white"
-								href={"/projects"}
+								href={"/rollingboard"}
 							>
 								Projects
 							</Link>
 						</li>
-						<li>
-							<Link
-								className="transition-all hover:text-white"
-								href={"/profile"}
-							>
-								Profile
-							</Link>
+						<li className="" title="profile">
+							<CgProfile
+								cursor={"pointer"}
+								className="text-[#909296] hover:text-white"
+								size={25}
+								onClick={() => setShowProfile(true)}
+							/>
 						</li>
 
 						<li>
@@ -122,6 +125,11 @@ const Header = () => {
 					color="white"
 					size={25}
 					className="md:hidden"
+				/>
+				<UserProfile
+					setShowProfile={setShowProfile}
+					showProfile={showProfile}
+					setShowNav={setShowNav}
 				/>
 			</div>
 		</header>
