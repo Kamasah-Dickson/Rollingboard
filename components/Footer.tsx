@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const Footer = () => {
 	return (
-		<footer className="relative border-t border-[rgb(16,17,19,3)] bg-black py-3 pt-4">
+		<footer className="border-t mt-5 border-[rgb(16,17,19,3)] bg-black py-3 pt-4">
 			<div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 p-2 md:flex-row">
 				<Link href="/">
 					<Image src={rsLogo} width={25} height={25} alt="rs" />
