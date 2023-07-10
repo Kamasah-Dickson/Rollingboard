@@ -3,6 +3,8 @@ import { MdClose, MdSearch } from "react-icons/md";
 import defaultProfile from "../public/default-profile.jpg";
 import Image from "next/image";
 import { auth } from "@/configs/firebase";
+import Modal from "./Modal";
+import { useState } from "react";
 
 interface IProfile {
 	setShowProfile: Dispatch<SetStateAction<boolean>>;
@@ -11,6 +13,7 @@ interface IProfile {
 }
 
 const UserProfile = ({ setShowProfile, showProfile, setShowNav }: IProfile) => {
+	const [showModal, setShowModal] = useState(false);
 	return (
 		<>
 			<div
@@ -22,7 +25,7 @@ const UserProfile = ({ setShowProfile, showProfile, setShowNav }: IProfile) => {
 			<div
 				className={` ${
 					showProfile ? "translate-x-0" : "translate-x-[100%] "
-				} my-trans overflow-hidden border-l-[#8080801f] border-l z-30 text-white absolute right-0 top-0 h-screen w-[75%] md:w-[45%] lg:w-[28%] bg-[#0f111b]`}
+				} my-trans overflow-y-scroll overflow-hidden border-l-[#8080801f] border-l z-30 text-white absolute right-0 top-0 h-screen w-[75%] md:w-[45%] lg:w-[28%] bg-[#0f111b]`}
 			>
 				<MdClose
 					color="white"
@@ -32,7 +35,7 @@ const UserProfile = ({ setShowProfile, showProfile, setShowNav }: IProfile) => {
 					cursor={"pointer"}
 				/>
 				<div className="h-[150px] flex items-center my-gradient w-full"></div>
-				<div className="flex relative gap-2 p-2 -top-14 flex-col">
+				<div className="flex relative gap-2 p-5 -top-16 flex-col">
 					<div className="w-full flex items-end gap-5 flex-wrap">
 						<div className="w-[100px] rounded-full h-[100px] bg-[#a9a9b3d7]">
 							<Image
@@ -54,6 +57,7 @@ const UserProfile = ({ setShowProfile, showProfile, setShowNav }: IProfile) => {
 					</div>
 					<div className="flex gap-5 mt-3 flex-wrap">
 						<button
+							onClick={() => setShowModal(true)}
 							className="bg-[#25262B] hover:bg-[#3e3e42] transition-colors p-2 text-xs md:text-sm rounded-md active:scale-[1.02]"
 							type="button"
 						>
@@ -66,10 +70,13 @@ const UserProfile = ({ setShowProfile, showProfile, setShowNav }: IProfile) => {
 							Change Avatar
 						</button>
 					</div>
-					<div className="mt-7">
+					<div className="mt-10">
 						<h3 className=" font-bold text-center text-[#909296]">
 							Your Tasks
 						</h3>
+						{/* <p className=" font-normal text-xs text-center text-white mt-2">
+							You have no assigned tasks
+						</p> */}
 						<div className="flex mt-5 rounded-md border border-[#909296] max-w-lg items-center p-1 justify-between gap-4">
 							<input
 								className="bg-transparent p-1 text-white  w-full text-xs outline-none"
@@ -81,6 +88,7 @@ const UserProfile = ({ setShowProfile, showProfile, setShowNav }: IProfile) => {
 					</div>
 				</div>
 			</div>
+			{showModal && <Modal setShowModal={setShowModal} />}
 		</>
 	);
 };
