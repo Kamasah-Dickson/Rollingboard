@@ -4,6 +4,7 @@ import About from "../components/About";
 import { useEffect, useState } from "react";
 import { auth } from "../configs/firebase";
 import Link from "next/link";
+import Footer from "@/components/Footer";
 
 export default function Home() {
 	const [currentUser, setCurrentUser] = useState<null | any>(null);
@@ -40,6 +41,7 @@ export default function Home() {
 				</Link>
 			</section>
 			<About />
+			<Footer />
 		</>
 	);
 }
