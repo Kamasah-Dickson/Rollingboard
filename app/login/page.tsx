@@ -8,6 +8,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { auth } from "../../configs/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import {
 	signInWithEmailAndPassword,
@@ -28,13 +29,34 @@ const Login = () => {
 		handleSubmit,
 	} = useForm<Inputs>({
 		defaultValues: {
-			email: "ee",
+			email: "",
 			password: "",
 		},
 	});
 
+	useEffect(() => {
+		//redirect to rollingboard if the user is already logged in
+		const unsubscribe = auth?.onAuthStateChanged((user) => {
+			if (user) router.push("/rollingboard");
+		});
+
+		return () => {
+			unsubscribe();
+		};
+	}, [router]);
+
 	function handleCreateUserError(errorCode: string) {
 		switch (errorCode) {
+			case "auth/network-request-failed":
+				toast.error("Network erorr", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/user-not-found":
+				toast.error("There is no user with that account", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
 			case "auth/invalid-email":
 				toast.error("Invalid email. Please enter a valid email address.", {
 					position: toast.POSITION.TOP_CENTER,
@@ -51,7 +73,7 @@ const Login = () => {
 				});
 				break;
 			default:
-				toast.error("An error occurred while creating the user.", {
+				toast.error("An error occurred while signing in", {
 					position: toast.POSITION.TOP_CENTER,
 				});
 				break;
@@ -104,6 +126,7 @@ const Login = () => {
 			}
 		} catch (error) {
 			const errorCode = (error as any).code;
+			console.log(error);
 			handleCreateUserError(errorCode);
 		}
 	};
@@ -156,6 +179,7 @@ const Login = () => {
 							<label className="flex flex-col" htmlFor="email">
 								Email
 								<input
+									disabled={isSubmitting}
 									id="email"
 									type="email"
 									{...register("email", {
@@ -178,6 +202,7 @@ const Login = () => {
 							<label className="flex flex-col" htmlFor="password">
 								Password
 								<input
+									disabled={isSubmitting}
 									id="password"
 									{...register("password", {
 										required: "Password is required",
