@@ -68,12 +68,12 @@ const UserProfile = ({
 				onClick={() => (setShowProfile(false), setShowNav(false))}
 				className={`${
 					showProfile ? "translate-x-[0%] " : "translate-x-[100%]"
-				}   z-20 text-white profile absolute right-0 top-0  h-screen w-full bg-[#000000a8]`}
+				}   z-20  text-white absolute right-0 top-0  h-screen w-full bg-[#000000a8]`}
 			></div>
 			<div
 				className={` ${
 					showProfile ? "translate-x-0" : "translate-x-[100%] "
-				} my-trans overflow-y-scroll overflow-hidden border-l-[#8080801f] border-l z-30 text-white absolute right-0 top-0 h-screen w-[75%] md:w-[45%] lg:w-[28%] bg-[#0f111b]`}
+				} my-trans overflow-y-scroll overflow-hidden border-l-[#8080801f] border-l z-30 text-white absolute right-0 top-0 h-screen w-[75%] md:w-[45%] profile lg:w-[28%] bg-[#0f111b]`}
 			>
 				<MdClose
 					color="white"
