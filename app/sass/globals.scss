@@ -69,6 +69,21 @@
 		background-position: bottom left;
 	}
 
+	.modal,
+	.profile {
+		&::-webkit-scrollbar {
+			width: rem(8);
+		}
+		&::-webkit-scrollbar-thumb {
+			background-color: #45484dc9;
+			&:hover {
+				background: linear-gradient(to top, #101113, #90929673);
+			}
+			border-radius: rem(20);
+			transition: 0.3s ease;
+		}
+	}
+
 	@mixin bgGradient($firtstGradient, $secondGradient) {
 		background: linear-gradient(
 			180deg,
