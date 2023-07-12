@@ -2,12 +2,32 @@ import { MdClose } from "react-icons/md";
 import { Dispatch, SetStateAction } from "react";
 import { auth } from "@/configs/firebase";
 import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { Inputs } from "@/app/signup/page";
+import {
+	EmailAuthProvider,
+	reauthenticateWithCredential,
+	updateProfile,
+} from "firebase/auth";
+import { toast } from "react-toastify";
 interface Imodal {
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	profileType: string;
 }
 
 const Modal = ({ setShowModal, profileType }: Imodal) => {
+	const {
+		handleSubmit,
+		register,
+		formState: { errors, isSubmitting },
+	} = useForm<Inputs>({
+		defaultValues: {
+			name: "",
+			email: "",
+			password: "",
+		},
+	});
+
 	const router = useRouter();
 	const handleModalContentClick = (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -19,6 +39,66 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 		auth.signOut();
 		setShowModal(false);
 		router.push("/login");
+	};
+
+	function handleErroCode(errorCode: string) {
+		switch (errorCode) {
+			case "auth/network-request-failed":
+				toast.error("Network erorr", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/wrong-password":
+				toast.error("The password you entered is wrong", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/user-mismatch":
+				toast.error("User mismatched", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			case "auth/invalid-email":
+				toast.error("Invalid email. Please enter a valid email address.", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+			default:
+				toast.error("An error occurred while authenticating", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
+		}
+	}
+
+	const handleUpdateProfile: SubmitHandler<Inputs> = async (data) => {
+		try {
+			const credential = EmailAuthProvider.credential(
+				data.email || "",
+				data.password
+			);
+
+			const response = await reauthenticateWithCredential(
+				auth?.currentUser as any,
+				credential
+			);
+			if (response.user.uid === auth?.currentUser?.uid) {
+				await updateProfile(response.user, {
+					displayName: data.name,
+				});
+				toast.success("Profile name updated", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				setShowModal(false);
+			} else {
+				toast.error("Your credentials do not match");
+			}
+		} catch (error) {
+			console.log(error);
+			const errorCode = (error as any).code;
+
+			handleErroCode(errorCode);
+		}
 	};
 
 	return (
@@ -38,7 +118,11 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 						cursor={"pointer"}
 						onClick={() => setShowModal(false)}
 					/>
-					<div className="p-3">
+					<form
+						onSubmit={handleSubmit(handleUpdateProfile)}
+						method="post"
+						className="p-3"
+					>
 						{profileType === "edit" && (
 							<>
 								<h3 className="text-white text-xl mb-5">Edit Profile</h3>
@@ -48,33 +132,77 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 								>
 									Name
 									<input
+										{...register("name", {
+											required: "Name is required",
+										})}
+										aria-invalid={errors.name ? "true" : "false"}
+										required={true}
+										disabled={isSubmitting}
 										type="text"
-										className="bg-transparent p-2 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
+										className="bg-transparent p-2 my-1 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
 									/>
 								</label>
+								{errors.name && (
+									<p className="text-sm text-[crimson]" role="alert">
+										{errors.name?.message}
+									</p>
+								)}
 								<label
 									className="text-[#555555] text-sm flex flex-col my-3"
 									htmlFor="name"
 								>
-									Login
+									Email
 									<input
-										type="text"
-										className="bg-transparent p-2 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
+										{...register("email", {
+											required: "Email is required",
+											pattern: {
+												value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+												message: "Invalid email address",
+											},
+										})}
+										required={true}
+										disabled={isSubmitting}
+										type="email"
+										className="bg-transparent p-2 my-1 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
 									/>
 								</label>
+								{errors.email && (
+									<p className="text-sm text-[crimson]" role="alert">
+										{errors.email?.message}
+									</p>
+								)}
 								<label
 									className="text-[#555555] text-sm flex flex-col"
 									htmlFor="name"
 								>
 									Password
 									<input
-										type="text"
-										className="bg-transparent p-2 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
+										{...register("password", {
+											required: "Password is required",
+											minLength: {
+												value: 8,
+												message: "Passwords must be at least 8 characters long",
+											},
+										})}
+										aria-invalid={errors.password ? "true" : "false"}
+										required={true}
+										disabled={isSubmitting}
+										type="password"
+										className="bg-transparent p-2 my-1 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
 									/>
 								</label>
+
+								{errors.password && (
+									<p className="text-sm text-[crimson]" role="alert">
+										{errors.password?.message}
+									</p>
+								)}
 								<button
-									className="bg-[#25262B] transition-colors block text-white mx-auto mt-5 hover:bg-[#3e3e42] p-2 text-xs md:text-sm rounded-md active:scale-[1.02]"
-									type="button"
+									disabled={isSubmitting}
+									className={` ${
+										!isSubmitting && "active:scale-[1.02]"
+									} bg-[#25262B] disabled:bg-[#80808081] transition-colors block text-white mx-auto mt-5 hover:bg-[#3e3e42] p-2 text-xs md:text-sm rounded-md`}
+									type="submit"
 								>
 									Accept Changes
 								</button>
@@ -101,7 +229,7 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 								</div>
 							</>
 						)}
-					</div>
+					</form>
 				</div>
 			</div>
 		</>
