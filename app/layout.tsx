@@ -24,7 +24,7 @@ export default function RootLayout({
 			<body className={open_sans.className}>
 				<Header />
 				{children}
-				<ToastContainer />
+				<ToastContainer theme="dark" />
 			</body>
 		</html>
 	);
