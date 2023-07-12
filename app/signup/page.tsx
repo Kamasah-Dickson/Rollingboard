@@ -7,17 +7,18 @@ import { FcGoogle } from "react-icons/fc";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
+import { auth } from "../../configs/firebase";
 import {
 	createUserWithEmailAndPassword,
 	GoogleAuthProvider,
 	signInWithPopup,
+	updateProfile,
 } from "firebase/auth";
-import { auth } from "../../configs/firebase";
 
 type Inputs = {
 	email: string;
 	password: string;
+	name: string;
 };
 
 const Signup = () => {
@@ -30,11 +31,17 @@ const Signup = () => {
 		defaultValues: {
 			email: "",
 			password: "",
+			name: "",
 		},
 	});
 
 	function handleCreateUserError(errorCode: string) {
 		switch (errorCode) {
+			case "auth/network-request-failed":
+				toast.error("Network erorr", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
 			case "auth/invalid-email":
 				toast.error("Invalid email. Please enter a valid email address.", {
 					position: toast.POSITION.TOP_CENTER,
@@ -63,6 +70,7 @@ const Signup = () => {
 		const results = await signInWithPopup(auth, provider);
 		const user = results?.user;
 		const userDisplayName = results?.user?.displayName;
+
 		userDisplayName &&
 			toast.success(`Welcome ${userDisplayName}`, {
 				position: toast.POSITION.TOP_CENTER,
@@ -87,10 +95,11 @@ const Signup = () => {
 				data?.password
 			);
 			const user = userCredential?.user;
-			const userName = (user?.email as string).slice(
-				0,
-				user?.email?.indexOf("@")
-			);
+			const userName = auth?.currentUser?.displayName;
+
+			await updateProfile(user, {
+				displayName: data.name,
+			});
 
 			userName &&
 				toast.success(`Welcome ${userName}`, {
@@ -143,7 +152,7 @@ const Signup = () => {
 					<form
 						method="post"
 						onSubmit={handleSubmit(onSubmitSignup)}
-						className="md:max-md mx-auto max-w-md  rounded-xl border border-[#68686896] bg-[#101113] p-5 text-[#909296] shadow-md"
+						className="mx-auto max-w-[30rem]  rounded-xl border border-[#68686896] bg-[#101113] p-5 text-[#909296] shadow-md"
 					>
 						<Link href="/">
 							<MdClose
@@ -159,6 +168,7 @@ const Signup = () => {
 							<label className="flex flex-col" htmlFor="email">
 								Email
 								<input
+									disabled={isSubmitting}
 									id="email"
 									type="email"
 									{...register("email", {
@@ -178,9 +188,29 @@ const Signup = () => {
 									{errors.email?.message}
 								</p>
 							)}
+							<label className="flex flex-col" htmlFor="email">
+								Name
+								<input
+									disabled={isSubmitting}
+									id="name"
+									type="text"
+									{...register("name", {
+										required: "Name is required",
+									})}
+									aria-invalid={errors.name ? "true" : "false"}
+									className="focus:borderwhite my-2 rounded-md border border-[#68686896] bg-transparent p-2 text-white"
+								/>
+							</label>
+
+							{errors.name && (
+								<p className="text-sm text-[crimson]" role="alert">
+									{errors.name?.message}
+								</p>
+							)}
 							<label className="flex flex-col" htmlFor="password">
 								Password
 								<input
+									disabled={isSubmitting}
 									id="password"
 									{...register("password", {
 										required: "Password is required",
