@@ -14,8 +14,10 @@ import {
 	signInWithPopup,
 	updateProfile,
 } from "firebase/auth";
+import { metadata } from "../layout";
+metadata.title = "Sign up to Rollingboard";
 
-type Inputs = {
+export type Inputs = {
 	email: string;
 	password: string;
 	name: string;
@@ -42,6 +44,11 @@ const Signup = () => {
 					position: toast.POSITION.TOP_CENTER,
 				});
 				break;
+			case "auth/wrong-password":
+				toast.error("The password you entered is wrong", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+				break;
 			case "auth/invalid-email":
 				toast.error("Invalid email. Please enter a valid email address.", {
 					position: toast.POSITION.TOP_CENTER,
@@ -52,11 +59,7 @@ const Signup = () => {
 					position: toast.POSITION.TOP_CENTER,
 				});
 				break;
-			case "auth/weak-password":
-				toast.error("The password must be at least 6 characters long.", {
-					position: toast.POSITION.TOP_CENTER,
-				});
-				break;
+
 			default:
 				toast.error("An error occurred while creating the user.", {
 					position: toast.POSITION.TOP_CENTER,
@@ -239,7 +242,9 @@ const Signup = () => {
 							</span>
 							<button
 								disabled={isSubmitting}
-								className={` mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] disabled:bg-[#80808081] `}
+								className={` ${
+									!isSubmitting && "active:scale-[1.02]"
+								} mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] disabled:bg-[#80808081] `}
 								type="submit"
 							>
 								Create an account
@@ -247,7 +252,9 @@ const Signup = () => {
 							<button
 								onClick={signupUsingGoogle}
 								disabled={isSubmitting}
-								className=" mt-6 flex disabled:bg-[#80808081] flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black active:scale-[1.03] "
+								className={` ${
+									!isSubmitting && "active:scale-[1.02]"
+								} mt-6 flex disabled:bg-[#80808081] flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black `}
 								type="button"
 							>
 								Signup with Google <FcGoogle size={20} />
