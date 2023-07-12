@@ -9,7 +9,8 @@ import { auth } from "../../configs/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-
+import { metadata } from "../layout";
+metadata.title = "Log into rollingboard";
 import {
 	signInWithEmailAndPassword,
 	GoogleAuthProvider,
@@ -231,7 +232,9 @@ const Login = () => {
 							</span>
 							<button
 								disabled={isSubmitting}
-								className={` mt-6  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] disabled:bg-[#80808081] `}
+								className={` mt-6 ${
+									!isSubmitting && "active:scale-[1.02]"
+								}  rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[#3517a1] disabled:bg-[#80808081] `}
 								type="submit"
 							>
 								Sign In
@@ -239,7 +242,9 @@ const Login = () => {
 							<button
 								onClick={loginUsingGoogle}
 								disabled={isSubmitting}
-								className=" mt-6 flex disabled:bg-[#80808081] disabled:text-white flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black active:scale-[1.03] "
+								className={` ${
+									!isSubmitting && "active:scale-[1.02]"
+								} mt-6 flex disabled:bg-[#80808081] disabled:text-white flex-wrap items-center justify-center gap-3 rounded-md bg-[#333232b0] px-7 py-2 text-white shadow-md transition-colors hover:bg-[white] hover:text-black `}
 								type="button"
 							>
 								Sign in with Google <FcGoogle size={20} />
