@@ -1,6 +1,8 @@
 import Footer from "@/components/Footer";
 import { MdSearch, MdClose } from "react-icons/md";
 import { AiOutlinePlus } from "react-icons/ai";
+import { metadata } from "../layout";
+metadata.title = "Rollingboard";
 
 const RollingBoard = () => {
 	return (
