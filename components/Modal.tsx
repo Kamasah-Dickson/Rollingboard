@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { auth } from "@/configs/firebase";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { Inputs } from "@/app/signup/page";
+import { Inputs } from "./SignupLogic";
 import {
 	EmailAuthProvider,
 	reauthenticateWithCredential,
