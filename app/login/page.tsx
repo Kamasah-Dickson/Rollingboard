@@ -9,8 +9,12 @@ import { auth } from "../../configs/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { metadata } from "../layout";
-metadata.title = "Log into rollingboard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Log into rollingboard",
+};
+
 import {
 	signInWithEmailAndPassword,
 	GoogleAuthProvider,
