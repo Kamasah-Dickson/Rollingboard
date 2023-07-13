@@ -1,6 +1,7 @@
 import LoginLogic from "@/components/LoginLogic";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
 	title: "Log into rollingboard",
 };
 
