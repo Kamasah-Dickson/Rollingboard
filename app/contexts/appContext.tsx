@@ -9,7 +9,7 @@ import {
 	useEffect,
 } from "react";
 import { onValue, ref } from "firebase/database";
-import { database } from "@/configs/firebase";
+import { auth, database } from "@/configs/firebase";
 import { Iproject } from "@/fakeData";
 
 interface Imodal {
@@ -37,7 +37,7 @@ const AppContext = ({ children }: { children: ReactElement }) => {
 
 	//fetch the data from firebase here and pass it as props to the project component
 	useEffect(() => {
-		const dbRef = ref(database, "projects/");
+		const dbRef = ref(database, "projects/" + auth?.currentUser?.uid);
 		onValue(dbRef, (snapshot) => {
 			const data = snapshot.val();
 			if (data) {
