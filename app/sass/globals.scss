@@ -84,12 +84,7 @@
 		}
 	}
 
-	@mixin bgGradient($firtstGradient, $secondGradient) {
-		background: linear-gradient(
-			180deg,
-			$firtstGradient 3%,
-			$secondGradient 100%
-		);
+	.projectCard {
 		background-color: black;
 		border-radius: rem(17);
 		position: relative;
@@ -98,18 +93,15 @@
 		justify-content: center;
 		overflow: hidden;
 		padding: 1px;
+		height: 300px;
+		position: relative;
 
-		&::before {
-			content: "";
+		.before {
 			width: 100%;
 			height: 100%;
 			position: absolute;
 			top: 0;
-			background: linear-gradient(
-				360deg,
-				rgba(16, 17, 19, 0) 0%,
-				$firtstGradient 100%
-			);
+
 			border-radius: rem(17);
 		}
 
@@ -125,11 +117,6 @@
 			height: 100%;
 			z-index: 10;
 		}
-	}
-
-	.projectCard {
-		@include bgGradient(rgba(220, 20, 60, 0.185), rgba(16, 17, 19, 0));
-		height: 300px;
 	}
 
 	.card {
