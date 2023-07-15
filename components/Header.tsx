@@ -127,17 +127,12 @@ const Header = () => {
 
 				{!currentUser && (
 					<div className="hidden items-center justify-center gap-5 md:flex">
-						<Link
-							href={"/login"}
-							type="button"
-							className="cursor-pointer text-white"
-						>
+						<Link href={"/login"} className="cursor-pointer text-white">
 							Login
 						</Link>
 						<Link
 							href={"/signup"}
 							className="cursor-pointer rounded-lg bg-white px-3 py-1 text-black active:scale-[1.01]"
-							type="button"
 						>
 							Signup
 						</Link>
