@@ -3,6 +3,7 @@ export interface Iproject {
 	projectName: string;
 	description: string;
 	tasks: { backlog: string[]; todo: string[]; finished: string[] }[];
+	color: string;
 }
 [];
 
@@ -24,22 +25,6 @@ export const data: Iproject[] = [
 				finished: [], // a projet column
 			},
 		],
-	},
-	{
-		uid: "32478923h",
-		projectName: "test",
-		description: "this is a description",
-		tasks: [
-			{
-				backlog: [
-					"Proof of Concept",
-					"Regression Test",
-					"set up Monitoring and controlling process",
-					"requirements analysis completed",
-				],
-				todo: ["final check", "desktop publishing", "linguistic review"],
-				finished: [], // a projet column
-			},
-		],
+		color: "dfsdf",
 	},
 ];
