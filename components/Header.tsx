@@ -18,20 +18,28 @@ const Header = () => {
 	const [showProfile, setShowProfile] = useState(false);
 	const { showModal, setShowModal, profileType, setProfileType } =
 		useContext(modalContext);
+	const [isAuthStateChangedInitialized, setIsAuthStateChangedInitialized] =
+		useState(false);
 
 	const router = useRouter();
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			setCurrentUser(user);
+			setIsAuthStateChangedInitialized(true); // Set the flag to indicate initialization
 		});
 
-		if (!auth.currentUser) router.push("/login");
+		if (!isAuthStateChangedInitialized) {
+			return;
+		}
 
+		if (!auth.currentUser) {
+			router.push("/login");
+		}
 		return () => {
 			unsubscribe();
 		};
-	}, [router]);
+	}, [router, isAuthStateChangedInitialized]);
 
 	return (
 		<header
