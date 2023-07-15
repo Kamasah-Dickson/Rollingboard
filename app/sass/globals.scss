@@ -129,6 +129,7 @@
 
 	.projectCard {
 		@include bgGradient(rgba(220, 20, 60, 0.185), rgba(16, 17, 19, 0));
+		height: 300px;
 	}
 
 	.card {
