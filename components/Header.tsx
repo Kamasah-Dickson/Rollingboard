@@ -4,19 +4,20 @@ import Image from "next/image";
 import logo from "../public/Rollingboard.svg";
 import Link from "next/link";
 import { MdClose, MdMenu } from "react-icons/md";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { auth } from "../configs/firebase";
 import { CgProfile } from "react-icons/cg";
 import UserProfile from "./UserProfile";
 import Modal from "./Modal";
 import { useRouter } from "next/navigation";
+import { modalContext } from "@/app/contexts/appContext";
 
 const Header = () => {
 	const [showNav, setShowNav] = useState(false);
 	const [currentUser, setCurrentUser] = useState<null | any>(null);
 	const [showProfile, setShowProfile] = useState(false);
-	const [showModal, setShowModal] = useState(false);
-	const [profileType, setProfileType] = useState("");
+	const { showModal, setShowModal, profileType, setProfileType } =
+		useContext(modalContext);
 
 	const router = useRouter();
 
