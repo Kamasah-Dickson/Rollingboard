@@ -29,11 +29,40 @@ const Projects = () => {
 		setProfileType("newProject");
 	};
 
+	function randomColor(color: string) {
+		const modifiedColor = color;
+		return {
+			background: `linear-gradient(180deg , ${modifiedColor} 0%, rgba(0, 0, 0, 1) 75%)`,
+		};
+	}
+	function border(color: string) {
+		const colors = [
+			"#320606",
+			"#321E06",
+			"#063218",
+			"#320630",
+			"#091C43",
+			"#09201E",
+			"#191D09",
+		];
+		const randomIndex = Math.floor(Math.random() * colors.length);
+		const selectedColor = colors[randomIndex] + "01";
+		return {
+			background: `linear-gradient(180deg, ${color} 0%, ${selectedColor} 95%)`,
+		};
+	}
+
 	return (
 		<div className="mt-20 gap-5 my-grid">
 			{Object.entries(projectData).map(([key, project]) => {
 				return (
-					<div key={project.uid} className="projectCard max-w-xl">
+					<div
+						key={key}
+						className="projectCard max-w-xl"
+						style={randomColor(project.color)}
+					>
+						<div className="before" style={border(project.color)}></div>
+
 						<div className="card-inner">
 							<MdClose
 								size={25}
@@ -68,7 +97,9 @@ const Projects = () => {
 					</div>
 				);
 			})}
-			<div className="projectCard max-w-xl">
+
+			<div className="projectCard max-w-xl" style={randomColor("#06321899")}>
+				<div className="before" style={border("#06321899")}></div>
 				<div className="card-inner">
 					<button
 						onClick={handleCreateProject}

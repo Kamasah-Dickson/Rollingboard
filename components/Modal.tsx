@@ -90,6 +90,18 @@ const Modal = ({
 
 	const handleUpdateProfile: SubmitHandler<Inputs> = async (data) => {
 		if (profileType === "newProject") {
+			const colors = [
+				"#320606",
+				"#321E06",
+				"#063218",
+				"#320630",
+				"#091C43",
+				"#09201E",
+				"#191D09",
+			];
+			const randomIndex = Math.floor(Math.random() * colors.length);
+			const selectedColor = colors[randomIndex];
+
 			if (isOffline) {
 				toast.error("You are offline, waiting to sync");
 				setShowModal(false);
@@ -99,6 +111,7 @@ const Modal = ({
 					uid: uuid(),
 					projectName: data.projectName,
 					description: data.description,
+					color: selectedColor,
 				});
 				toast.success("New project successfully created", {
 					position: toast.POSITION.TOP_CENTER,
