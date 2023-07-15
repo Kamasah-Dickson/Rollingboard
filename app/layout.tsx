@@ -4,6 +4,7 @@ import { Open_Sans } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Metadata } from "next";
+import AppContext from "./contexts/appContext";
 
 const open_sans = Open_Sans({
 	subsets: ["latin"],
@@ -32,7 +33,9 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={open_sans.className}>
-				<Header />
+				<AppContext>
+					<Header />
+				</AppContext>
 				{children}
 				<ToastContainer theme="dark" />
 			</body>
