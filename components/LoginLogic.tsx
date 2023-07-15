@@ -1,4 +1,5 @@
 "use client";
+
 import correctImage from "../public/correct.svg";
 import Image from "next/image";
 import { MdClose } from "react-icons/md";
@@ -8,7 +9,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { auth } from "../configs/firebase";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import {
 	signInWithEmailAndPassword,
 	GoogleAuthProvider,
@@ -32,17 +32,6 @@ function LoginLogic() {
 			password: "",
 		},
 	});
-
-	useEffect(() => {
-		//redirect to rollingboard if the user is already logged in
-		const unsubscribe = auth?.onAuthStateChanged((user) => {
-			if (user) router.push("/rollingboard");
-		});
-
-		return () => {
-			unsubscribe();
-		};
-	}, [router]);
 
 	function handleCreateUserError(errorCode: string) {
 		switch (errorCode) {
@@ -222,7 +211,7 @@ function LoginLogic() {
 								</p>
 							)}
 
-							<span className="text-sm">
+							<span className="text-sm pt-2">
 								Dont have an account?{" "}
 								<Link href="/signup" className="text-white">
 									Sign up
