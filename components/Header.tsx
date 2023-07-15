@@ -11,17 +11,18 @@ import UserProfile from "./UserProfile";
 import Modal from "./Modal";
 import { useRouter } from "next/navigation";
 import { modalContext } from "@/app/contexts/appContext";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
 	const [showNav, setShowNav] = useState(false);
 	const [currentUser, setCurrentUser] = useState<null | any>(null);
 	const [showProfile, setShowProfile] = useState(false);
+	const router = useRouter();
+	const pathname = usePathname();
 	const { showModal, setShowModal, profileType, setProfileType } =
 		useContext(modalContext);
 	const [isAuthStateChangedInitialized, setIsAuthStateChangedInitialized] =
 		useState(false);
-
-	const router = useRouter();
 
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -34,12 +35,12 @@ const Header = () => {
 		}
 
 		if (!auth.currentUser) {
-			router.push("/login");
+			pathname !== "/" && router.push("/login");
 		}
 		return () => {
 			unsubscribe();
 		};
-	}, [router, isAuthStateChangedInitialized]);
+	}, [router, isAuthStateChangedInitialized, pathname]);
 
 	return (
 		<header
