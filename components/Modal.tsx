@@ -44,6 +44,8 @@ const Modal = ({
 	});
 
 	const router = useRouter();
+	const isOffline = !navigator.onLine;
+
 	const handleModalContentClick = (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
@@ -88,6 +90,10 @@ const Modal = ({
 
 	const handleUpdateProfile: SubmitHandler<Inputs> = async (data) => {
 		if (profileType === "newProject") {
+			if (isOffline) {
+				toast.error("You are offline, waiting to sync");
+				setShowModal(false);
+			}
 			try {
 				await set(ref(database, "projects/" + uuid()), {
 					uid: uuid(),
@@ -135,6 +141,11 @@ const Modal = ({
 	const handleRemove = async () => {
 		// update project by removing it
 		try {
+			// Check if the user is offline
+			if (isOffline) {
+				toast.error("You are offline, waiting to sync");
+				setShowModal(false);
+			}
 			await remove(ref(database, "projects/" + projectID));
 
 			//sync with app if offline
