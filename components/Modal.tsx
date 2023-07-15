@@ -1,21 +1,34 @@
 import { MdClose } from "react-icons/md";
 import { Dispatch, SetStateAction } from "react";
-import { auth } from "@/configs/firebase";
+import { auth, database } from "@/configs/firebase";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Inputs } from "./SignupLogic";
+import uuid from "react-uuid";
 import {
 	EmailAuthProvider,
 	reauthenticateWithCredential,
 	updateProfile,
 } from "firebase/auth";
 import { toast } from "react-toastify";
+import NewProject from "./NewProject";
+import { ref, remove, set } from "firebase/database";
+import { Iproject } from "@/fakeData";
 interface Imodal {
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	profileType: string;
+	projectID?: string;
+	setProjectData?: Dispatch<SetStateAction<Iproject[]>>;
+	projectData?: Iproject[];
 }
 
-const Modal = ({ setShowModal, profileType }: Imodal) => {
+const Modal = ({
+	setShowModal,
+	profileType,
+	projectID,
+	setProjectData,
+	projectData,
+}: Imodal) => {
 	const {
 		handleSubmit,
 		register,
@@ -25,6 +38,8 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 			name: "",
 			email: "",
 			password: "",
+			description: "",
+			projectName: "",
 		},
 	});
 
@@ -72,40 +87,79 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 	}
 
 	const handleUpdateProfile: SubmitHandler<Inputs> = async (data) => {
-		try {
-			const credential = EmailAuthProvider.credential(
-				data.email || "",
-				data.password
-			);
-
-			const response = await reauthenticateWithCredential(
-				auth?.currentUser as any,
-				credential
-			);
-			if (response.user.uid === auth?.currentUser?.uid) {
-				await updateProfile(response.user, {
-					displayName: data.name,
+		if (profileType === "newProject") {
+			try {
+				await set(ref(database, "projects/" + uuid()), {
+					uid: uuid(),
+					projectName: data.projectName,
+					description: data.description,
 				});
-				toast.success("Profile name updated", {
+				toast.success("New project successfully created", {
 					position: toast.POSITION.TOP_CENTER,
 				});
-				setShowModal(false);
+			} catch (error) {
+				console.log(error);
+			}
+			setShowModal(false);
+		} else {
+			try {
+				const credential = EmailAuthProvider.credential(
+					data.email || "",
+					data.password
+				);
+
+				const response = await reauthenticateWithCredential(
+					auth?.currentUser as any,
+					credential
+				);
+				if (response.user.uid === auth?.currentUser?.uid) {
+					await updateProfile(response.user, {
+						displayName: data.name,
+					});
+					toast.success("Profile name updated", {
+						position: toast.POSITION.TOP_CENTER,
+					});
+					setShowModal(false);
+				} else {
+					toast.error("Your credentials do not match");
+				}
+			} catch (error) {
+				console.log(error);
+				const errorCode = (error as any).code;
+
+				handleErroCode(errorCode);
+			}
+		}
+	};
+
+	const handleRemove = async () => {
+		// update project by removing it
+		try {
+			await remove(ref(database, "projects/" + projectID));
+
+			//sync with app if offline
+			if (!projectData) {
+				return;
 			} else {
-				toast.error("Your credentials do not match");
+				const filteredEntries = Object.entries(projectData).filter(
+					([key, value]) => key !== projectID
+				);
+				const filteredData = Object.fromEntries(filteredEntries);
+				if (setProjectData) {
+					setProjectData(filteredData as unknown as Iproject[]);
+				}
 			}
 		} catch (error) {
 			console.log(error);
-			const errorCode = (error as any).code;
-
-			handleErroCode(errorCode);
 		}
+		setShowModal(false);
 	};
 
 	return (
 		<>
 			<div
 				onClick={() => setShowModal(false)}
-				className="modal overflow-y-scroll px-4 z-50 absolute top-0 flex flex-col justify-center left-0 w-full h-screen bg-[rgba(5,5,5,0.61)]"
+				className="modal overflow-y-scroll px-4 z-50 absolute top-0 flex flex-col justify-center left-0 w-full h-screen bg-[rgba(5,5,5,0.56)]"
 			>
 				<div
 					onClick={handleModalContentClick}
@@ -123,7 +177,7 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 						method="post"
 						className="p-3"
 					>
-						{profileType === "edit" && (
+						{profileType === "edit" ? (
 							<>
 								<h3 className="text-white text-xl mb-5">Edit Profile</h3>
 								<label
@@ -207,8 +261,7 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 									Accept Changes
 								</button>
 							</>
-						)}
-						{profileType === "signout" && (
+						) : profileType === "signout" ? (
 							<>
 								<p className="text-white text-center">
 									Do you want to log out ?
@@ -228,6 +281,35 @@ const Modal = ({ setShowModal, profileType }: Imodal) => {
 									</button>
 								</div>
 							</>
+						) : profileType === "alert" ? (
+							<>
+								<p className="text-white text-center">
+									Are you sure you want to remove this project?
+								</p>
+								<div className="flex items-center gap-4 text-white text-xs justify-center mt-5">
+									<button
+										type="button"
+										onClick={() => handleRemove()}
+										className="bg-[crimson] py-2 px-7 rounded-md active:scale-[1.02]"
+									>
+										Yes
+									</button>
+									<button
+										onClick={() => setShowModal(false)}
+										className="px-9 active:scale-[1.02] py-2 rounded-md bg-black"
+									>
+										No
+									</button>
+								</div>
+							</>
+						) : (
+							profileType === "newProject" && (
+								<NewProject
+									errors={errors}
+									isSubmitting={isSubmitting}
+									register={register}
+								/>
+							)
 						)}
 					</form>
 				</div>
