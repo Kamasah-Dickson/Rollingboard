@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from "react";
-import { MdClose, MdSearch } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import defaultProfile from "../public/default-profile.jpg";
 
 import Image from "next/image";
@@ -130,17 +130,17 @@ const UserProfile = ({
 						<h3 className=" font-bold text-center text-[#909296]">
 							Your Tasks
 						</h3>
-						{/* <p className=" font-normal text-xs text-center text-white mt-2">
+						<p className=" font-normal text-md text-center text-white mt-2">
 							You have no assigned tasks
-						</p> */}
-						<div className="flex mt-5 rounded-md border border-[#909296] max-w-lg items-center p-1 justify-between gap-4">
+						</p>
+						{/* <div className="flex mt-5 rounded-md border border-[#909296] max-w-lg items-center p-1 justify-between gap-4">
 							<input
 								className="bg-transparent p-1 text-white  w-full text-xs outline-none"
 								type="text"
 								placeholder="Search Tasks..."
 							/>
 							<MdSearch color="white" size={25} />
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
