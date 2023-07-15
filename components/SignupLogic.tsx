@@ -19,6 +19,8 @@ export type Inputs = {
 	email: string;
 	password: string;
 	name: string;
+	description: string;
+	projectName: string;
 };
 
 const SignupLogic = () => {
@@ -232,7 +234,7 @@ const SignupLogic = () => {
 								</p>
 							)}
 
-							<span className="text-sm">
+							<span className="text-sm pt-2">
 								Already having an account?{" "}
 								<Link href="/login" className="text-white">
 									Login
