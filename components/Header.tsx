@@ -34,9 +34,13 @@ const Header = () => {
 			return;
 		}
 
-		if (!auth.currentUser) {
-			pathname !== "/" && router.push("/login");
+		// if (!auth.currentUser) {
+		// 	pathname !== "/" && router.push("/login");
+		// }
+		if (!auth.currentUser && pathname !== "/signup" && pathname !== "/") {
+			router.push("/login");
 		}
+
 		return () => {
 			unsubscribe();
 		};
