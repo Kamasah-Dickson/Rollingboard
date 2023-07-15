@@ -107,12 +107,15 @@ const Modal = ({
 				setShowModal(false);
 			}
 			try {
-				await set(ref(database, "projects/" + uuid()), {
-					uid: uuid(),
-					projectName: data.projectName,
-					description: data.description,
-					color: selectedColor,
-				});
+				await set(
+					ref(database, "projects/" + auth?.currentUser?.uid + "/" + uuid()),
+					{
+						uid: uuid(),
+						projectName: data.projectName,
+						description: data.description,
+						color: selectedColor,
+					}
+				);
 				toast.success("New project successfully created", {
 					position: toast.POSITION.TOP_CENTER,
 				});
