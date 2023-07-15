@@ -73,10 +73,14 @@ const Projects = () => {
 							/>
 							<div className=" mx-auto flex w-full flex-col items-center justify-center rounded-[17px] px-5 pt-16 ">
 								<h3 className="my-2 text-center text-lg font-medium md:text-xl">
-									{project.projectName}
+									{project.projectName.length > 30
+										? project.projectName.slice(0, 40) + "..."
+										: project.projectName}
 								</h3>
 								<p className="text-center text-sm font-normal text-[#909296]">
-									{project.description}
+									{project.description.length > 50
+										? project.description.slice(0, 100) + "..."
+										: project.description}
 								</p>
 							</div>
 							<div className="flex my-7 items-center gap-5 justify-center">
