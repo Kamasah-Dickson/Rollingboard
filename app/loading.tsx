@@ -1,9 +1,7 @@
 "use client";
 
-import Spinner from "react-spinner";
-import "react-spinner/react-spinner.css";
+import { CircleLoader } from "react-spinners";
 
 export default function Loading() {
-	// Or a custom loading skeleton component
-	return <Spinner />;
+	return <CircleLoader color="white" />;
 }
