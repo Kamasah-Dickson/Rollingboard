@@ -6,27 +6,42 @@ import { useContext, useState } from "react";
 import { modalContext } from "@/app/contexts/appContext";
 import Modal from "./Modal";
 
+export interface IDefault {
+	uid: string;
+	projectName: string;
+	description: string;
+	tasks: { backlog: string[]; todo: string[]; finished: string[] }[];
+	color: string;
+}
+
 const Projects = () => {
 	const [projectID, setProjectID] = useState("");
+	const [projectDefaultValues, setProjectdefaultValues] = useState<IDefault>({
+		uid: "",
+		projectName: "",
+		description: "",
+		tasks: [{ backlog: [], todo: [], finished: [] }],
+		color: "",
+	});
 
 	const {
 		showModal,
 		setShowModal,
-		setProfileType,
-		profileType,
+		setmodalType,
+		modalType,
 		projectData,
 		setProjectData,
 	} = useContext(modalContext);
 
-	const handleClose = (id: any) => {
+	const handleClose = (id: string) => {
 		setProjectID(id);
+		setmodalType("alert");
 		setShowModal(true);
-		setProfileType("alert");
 	};
 
 	const handleCreateProject = () => {
+		setmodalType("newProject");
 		setShowModal(true);
-		setProfileType("newProject");
 	};
 
 	function randomColor(color: string) {
@@ -51,6 +66,13 @@ const Projects = () => {
 			background: `linear-gradient(180deg, ${color} 0%, ${selectedColor} 95%)`,
 		};
 	}
+
+	const handleProjectEdit = (id: string, project: IDefault) => {
+		setProjectID(id);
+		setmodalType("editProject");
+		setShowModal(true);
+		setProjectdefaultValues(project);
+	};
 
 	return (
 		<div className="mt-20 gap-5 my-grid">
@@ -91,6 +113,7 @@ const Projects = () => {
 									Open board
 								</button>
 								<button
+									onClick={() => handleProjectEdit(key, project)}
 									type="button"
 									className="text-white active:scale-[1.03] bg-[#47454580] p-2 text-sm rounded-sm"
 								>
@@ -121,9 +144,11 @@ const Projects = () => {
 				<Modal
 					projectID={projectID}
 					setShowModal={setShowModal}
-					profileType={profileType}
+					modalType={modalType}
 					setProjectData={setProjectData}
 					projectData={projectData}
+					projectDefaultValues={projectDefaultValues}
+					setProjectdefaultValues={setProjectdefaultValues}
 				/>
 			)}
 		</div>
