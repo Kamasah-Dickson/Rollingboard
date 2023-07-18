@@ -17,8 +17,8 @@ interface IProfile {
 	setShowNav: Dispatch<SetStateAction<boolean>>;
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	showModal: boolean;
-	profileType: string;
-	setProfileType: Dispatch<SetStateAction<string>>;
+	modalType: string;
+	setmodalType: Dispatch<SetStateAction<string>>;
 }
 
 const UserProfile = ({
@@ -27,8 +27,8 @@ const UserProfile = ({
 	setShowNav,
 	showModal,
 	setShowModal,
-	profileType,
-	setProfileType,
+	modalType,
+	setmodalType,
 }: IProfile) => {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -105,7 +105,7 @@ const UserProfile = ({
 					</div>
 					<div className="flex gap-5 mt-3 flex-wrap">
 						<button
-							onClick={() => (setShowModal(true), setProfileType("edit"))}
+							onClick={() => (setShowModal(true), setmodalType("edit"))}
 							className="bg-[#25262B] hover:bg-[#3e3e42] transition-colors p-2 text-xs md:text-sm rounded-md active:scale-[1.02]"
 							type="button"
 						>
@@ -144,9 +144,7 @@ const UserProfile = ({
 					</div>
 				</div>
 			</div>
-			{showModal && (
-				<Modal profileType={profileType} setShowModal={setShowModal} />
-			)}
+			{showModal && <Modal modalType={modalType} setShowModal={setShowModal} />}
 		</>
 	);
 };
