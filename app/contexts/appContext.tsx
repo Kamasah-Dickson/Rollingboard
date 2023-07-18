@@ -10,29 +10,29 @@ import {
 } from "react";
 import { onValue, ref } from "firebase/database";
 import { auth, database } from "@/configs/firebase";
-import { Iproject } from "@/fakeData";
+import { Iproject } from "@/interface/interface";
 
 interface Imodal {
 	showModal: boolean;
-	profileType: string;
+	modalType: string;
 	projectData: Iproject[];
 	setShowModal: Dispatch<SetStateAction<boolean>>;
-	setProfileType: Dispatch<SetStateAction<string>>;
+	setmodalType: Dispatch<SetStateAction<string>>;
 	setProjectData: Dispatch<SetStateAction<Iproject[]>>;
 }
 
 export const modalContext = createContext<Imodal>({
 	showModal: false,
-	profileType: "",
+	modalType: "",
 	projectData: [],
 	setShowModal: () => {},
-	setProfileType: () => {},
+	setmodalType: () => {},
 	setProjectData: () => {},
 });
 
 const AppContext = ({ children }: { children: ReactElement }) => {
 	const [showModal, setShowModal] = useState(false);
-	const [profileType, setProfileType] = useState("");
+	const [modalType, setmodalType] = useState("");
 	const [projectData, setProjectData] = useState<Iproject[]>([]);
 
 	//fetch the data from firebase here and pass it as props to the project component
@@ -51,8 +51,8 @@ const AppContext = ({ children }: { children: ReactElement }) => {
 			value={{
 				showModal,
 				setShowModal,
-				profileType,
-				setProfileType,
+				modalType,
+				setmodalType,
 				projectData,
 				setProjectData,
 			}}
