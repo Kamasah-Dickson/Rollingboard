@@ -19,7 +19,7 @@ const Header = () => {
 	const [showProfile, setShowProfile] = useState(false);
 	const router = useRouter();
 	const pathname = usePathname();
-	const { showModal, setShowModal, profileType, setProfileType } =
+	const { showModal, setShowModal, modalType, setmodalType } =
 		useContext(modalContext);
 	const [isAuthStateChangedInitialized, setIsAuthStateChangedInitialized] =
 		useState(false);
@@ -97,7 +97,7 @@ const Header = () => {
 						</li>
 						<li
 							className="transition-all hover:text-white cursor-pointer"
-							onClick={() => (setProfileType("signout"), setShowModal(true))}
+							onClick={() => (setmodalType("signout"), setShowModal(true))}
 						>
 							Signout
 						</li>
@@ -155,13 +155,11 @@ const Header = () => {
 					setShowNav={setShowNav}
 					showModal={showModal}
 					setShowModal={setShowModal}
-					profileType={profileType}
-					setProfileType={setProfileType}
+					modalType={modalType}
+					setmodalType={setmodalType}
 				/>
 			</div>
-			{showModal && (
-				<Modal profileType={profileType} setShowModal={setShowModal} />
-			)}
+			{showModal && <Modal setShowModal={setShowModal} modalType={modalType} />}
 		</header>
 	);
 };
