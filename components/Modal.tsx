@@ -12,22 +12,34 @@ import {
 } from "firebase/auth";
 import { toast } from "react-toastify";
 import NewProject from "./NewProject";
-import { ref, remove, set } from "firebase/database";
-import { Iproject } from "@/fakeData";
+import { ref, remove, set, update } from "firebase/database";
+import { IDefault } from "./Projects";
+import { Iproject } from "@/interface/interface";
 interface Imodal {
 	setShowModal: Dispatch<SetStateAction<boolean>>;
-	profileType: string;
-	projectID?: string;
 	setProjectData?: Dispatch<SetStateAction<Iproject[]>>;
+	setProjectdefaultValues?: Dispatch<SetStateAction<IDefault>>;
+	modalType: string;
+	projectID?: string;
 	projectData?: Iproject[];
+	projectDefaultValues?: IDefault;
 }
+
+// enum ModalType  {
+// 	newProject,
+// 	editProject,
+// 	edit,
+// 	alert,
+// }
 
 const Modal = ({
 	setShowModal,
-	profileType,
+	modalType,
 	projectID,
 	setProjectData,
 	projectData,
+	projectDefaultValues,
+	setProjectdefaultValues,
 }: Imodal) => {
 	const {
 		handleSubmit,
@@ -88,8 +100,8 @@ const Modal = ({
 		}
 	}
 
-	const handleUpdateProfile: SubmitHandler<Inputs> = async (data) => {
-		if (profileType === "newProject") {
+	const submitHandler: SubmitHandler<Inputs> = async (data) => {
+		if (modalType === "newProject") {
 			const colors = [
 				"#320606",
 				"#321E06",
@@ -117,6 +129,30 @@ const Modal = ({
 					}
 				);
 				toast.success("New project successfully created", {
+					position: toast.POSITION.TOP_CENTER,
+				});
+			} catch (error) {
+				console.log(error);
+			}
+			setShowModal(false);
+		} else if (modalType === "editProject") {
+			if (isOffline) {
+				toast.error("You are offline, waiting to sync");
+				setShowModal(false);
+			}
+			try {
+				///update
+				const updateRef = ref(
+					database,
+					"projects/" + auth?.currentUser?.uid + "/" + projectID
+				);
+				const updates = {
+					projectName: projectDefaultValues?.projectName,
+					description: projectDefaultValues?.description,
+				};
+
+				update(updateRef, updates);
+				toast.success(`Project has been updated`, {
 					position: toast.POSITION.TOP_CENTER,
 				});
 			} catch (error) {
@@ -155,19 +191,20 @@ const Modal = ({
 	};
 
 	const handleRemove = async () => {
-		// update project by removing it
 		try {
 			// Check if the user is offline
 			if (isOffline) {
 				toast.error("You are offline, waiting to sync");
 				setShowModal(false);
 			}
-			await remove(ref(database, "projects/" + projectID));
 
 			//sync with app if offline
 			if (!projectData) {
 				return;
 			} else {
+				await remove(
+					ref(database, "projects/" + auth?.currentUser?.uid + "/" + projectID)
+				);
 				const filteredEntries = Object.entries(projectData).filter(
 					([key, value]) => key !== projectID
 				);
@@ -200,11 +237,11 @@ const Modal = ({
 						onClick={() => setShowModal(false)}
 					/>
 					<form
-						onSubmit={handleSubmit(handleUpdateProfile)}
+						onSubmit={handleSubmit(submitHandler)}
 						method="post"
 						className="p-3"
 					>
-						{profileType === "edit" ? (
+						{modalType === "edit" ? (
 							<>
 								<h3 className="text-white text-xl mb-5">Edit Profile</h3>
 								<label
@@ -230,7 +267,7 @@ const Modal = ({
 								)}
 								<label
 									className="text-[#555555] text-sm flex flex-col my-3"
-									htmlFor="name"
+									htmlFor="email"
 								>
 									Email
 									<input
@@ -288,7 +325,64 @@ const Modal = ({
 									Accept Changes
 								</button>
 							</>
-						) : profileType === "signout" ? (
+						) : modalType === "editProject" ? (
+							<>
+								<h3 className="text-white text-xl mb-5">Edit Project</h3>
+								<label
+									className="text-[#555555] text-sm flex flex-col"
+									htmlFor="projectName"
+								>
+									Name
+									<input
+										required={true}
+										disabled={isSubmitting}
+										value={projectDefaultValues?.projectName}
+										onChange={(e) => {
+											if (setProjectdefaultValues) {
+												setProjectdefaultValues((prev) => ({
+													...prev,
+													projectName: e.target.value,
+												}));
+											}
+										}}
+										type="text"
+										className="bg-transparent p-2 my-1 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
+									/>
+								</label>
+
+								<label
+									className="text-[#555555] text-sm flex flex-col"
+									htmlFor="description"
+								>
+									Name
+									<textarea
+										className="bg-transparent resize-none p-2 my-1 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
+										name="desctiption"
+										onChange={(e) => {
+											if (setProjectdefaultValues) {
+												setProjectdefaultValues((prev) => ({
+													...prev,
+													description: e.target.value,
+												}));
+											}
+										}}
+										disabled={isSubmitting}
+										required={true}
+										value={projectDefaultValues?.description}
+									></textarea>
+								</label>
+
+								<button
+									disabled={isSubmitting}
+									className={` ${
+										!isSubmitting && "active:scale-[1.02]"
+									} bg-[#25262B] disabled:bg-[#80808081] transition-colors block text-white mx-auto mt-5 hover:bg-[#3e3e42] p-2 text-xs md:text-sm rounded-md`}
+									type="submit"
+								>
+									Accept Changes
+								</button>
+							</>
+						) : modalType === "signout" ? (
 							<>
 								<p className="text-white text-center">
 									Do you want to log out ?
@@ -308,7 +402,7 @@ const Modal = ({
 									</button>
 								</div>
 							</>
-						) : profileType === "alert" ? (
+						) : modalType === "alert" ? (
 							<>
 								<p className="text-white text-center">
 									Are you sure you want to remove this project?
@@ -330,7 +424,7 @@ const Modal = ({
 								</div>
 							</>
 						) : (
-							profileType === "newProject" && (
+							modalType === "newProject" && (
 								<NewProject
 									errors={errors}
 									isSubmitting={isSubmitting}
