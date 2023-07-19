@@ -191,17 +191,20 @@ const Modal = ({
 				setShowModal(false);
 			}
 
-			//sync with app if offline
 			if (!projectData) {
 				return;
 			} else {
 				await remove(
 					ref(database, "projects/" + auth?.currentUser?.uid + "/" + projectID)
 				);
-				const filteredEntries = Object.entries(projectData).filter(
-					([key, value]) => key !== projectID
+				const filteredEntries = Object.values(projectData).map((project) =>
+					Object.entries(project).filter(([key, value]) => key !== projectID)
 				);
-				const filteredData = Object.fromEntries(filteredEntries);
+
+				const filteredData = filteredEntries.map((filteredProject, index) => {
+					return Object.fromEntries(filteredProject);
+				});
+
 				if (setProjectData) {
 					setProjectData(filteredData as unknown as Iproject[]);
 				}
