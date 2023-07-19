@@ -25,13 +25,6 @@ interface Imodal {
 	projectDefaultValues?: IDefault;
 }
 
-// enum ModalType  {
-// 	newProject,
-// 	editProject,
-// 	edit,
-// 	alert,
-// }
-
 const Modal = ({
 	setShowModal,
 	modalType,
