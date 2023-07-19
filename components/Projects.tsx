@@ -5,6 +5,7 @@ import { MdClose } from "react-icons/md";
 import { useContext, useState } from "react";
 import { modalContext } from "@/app/contexts/appContext";
 import Modal from "./Modal";
+import Link from "next/link";
 
 export interface IDefault {
 	uid: string;
@@ -106,12 +107,13 @@ const Projects = () => {
 								</p>
 							</div>
 							<div className="flex my-7 items-center gap-5 justify-center">
-								<button
+								<Link
+									href={`/rollingboard/${key}`}
 									type="button"
 									className="active:scale-[1.03] text-white bg-[#47454580] p-2 text-sm rounded-sm"
 								>
 									Open board
-								</button>
+								</Link>
 								<button
 									onClick={() => handleProjectEdit(key, project)}
 									type="button"
