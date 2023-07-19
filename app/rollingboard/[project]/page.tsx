@@ -9,14 +9,6 @@ import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import Link from "next/link";
 
-// export interface Iproject {
-// 	uid: string;
-// 	projectName: string;
-// 	description: string;
-// 	tasks: { backlog: string[]; todo: string[]; finished: string[] }[];
-// 	color: string;
-// }[]
-
 const SingleProject = ({ params }: { params: { project: string } }) => {
 	const [currentProject, setCurrentProject] = useState<Iproject[]>([
 		{
