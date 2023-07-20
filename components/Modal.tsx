@@ -197,13 +197,12 @@ const Modal = ({
 				await remove(
 					ref(database, "projects/" + auth?.currentUser?.uid + "/" + projectID)
 				);
-				const filteredEntries = Object.values(projectData).map((project) =>
-					Object.entries(project).filter(([key, value]) => key !== projectID)
+
+				const allProjects = Object.entries(projectData).filter(
+					([key, value]) => key !== projectID
 				);
 
-				const filteredData = filteredEntries.map((filteredProject, index) => {
-					return Object.fromEntries(filteredProject);
-				});
+				const filteredData = Object.fromEntries(allProjects);
 
 				if (setProjectData) {
 					setProjectData(filteredData as unknown as Iproject[]);
