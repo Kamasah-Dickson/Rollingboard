@@ -27,7 +27,7 @@ const Header = () => {
 	useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			setCurrentUser(user);
-			setIsAuthStateChangedInitialized(true); // Set the flag to indicate initialization
+			setIsAuthStateChangedInitialized(true);
 		});
 
 		if (!isAuthStateChangedInitialized) {
