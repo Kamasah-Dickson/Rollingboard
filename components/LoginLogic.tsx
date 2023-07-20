@@ -97,7 +97,8 @@ function LoginLogic() {
 				data?.password
 			);
 			const user = userCredentials?.user;
-			const userName = user?.email?.slice(0, user?.email?.indexOf("@"));
+			const userName = user.displayName;
+
 			userName &&
 				toast.success(`Welcome ${userName}`, {
 					position: toast.POSITION.TOP_CENTER,
