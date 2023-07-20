@@ -19,15 +19,12 @@ const Header = () => {
 	const [showProfile, setShowProfile] = useState(false);
 	const router = useRouter();
 	const pathname = usePathname();
-	const { showModal, setShowModal, modalType, setmodalType, setUserAuth } =
+	const { showModal, setShowModal, modalType, setmodalType } =
 		useContext(modalContext);
 	const [isAuthStateChangedInitialized, setIsAuthStateChangedInitialized] =
 		useState(false);
 
 	useEffect(() => {
-		if (auth.currentUser?.uid) {
-			setUserAuth(auth.currentUser.uid);
-		}
 		const unsubscribe = auth.onAuthStateChanged((user) => {
 			setCurrentUser(user);
 			setIsAuthStateChangedInitialized(true); // Set the flag to indicate initialization
@@ -44,7 +41,7 @@ const Header = () => {
 		return () => {
 			unsubscribe();
 		};
-	}, [router, isAuthStateChangedInitialized, pathname, setUserAuth]);
+	}, [router, isAuthStateChangedInitialized, pathname]);
 
 	return (
 		<header
