@@ -49,7 +49,6 @@ const Projects = () => {
 				const data = snapshot.val();
 				if (data) {
 					setProjectData(data);
-					console.log(data);
 				}
 			});
 		}
