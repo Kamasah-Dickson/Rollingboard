@@ -43,8 +43,9 @@ const SingleProject = ({ params }: { params: { project: string } }) => {
 								<Link href="/rollingboard">
 									<IoIosArrowBack color="white" cursor={"pointer"} size={30} />
 								</Link>
-								<h1 className="text-2xl md:text-3xl">{project.projectName}</h1>
+								<h1 className="text-3xl md:text-4xl">{project.projectName}</h1>
 							</div>
+							<p className="ml-2 mt-3">{project.description}</p>
 						</div>
 					);
 				})}
