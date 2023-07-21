@@ -380,7 +380,7 @@ const Modal = ({
 						) : modalType === "signout" ? (
 							<>
 								<p className="text-white text-center">
-									Do you want to log out ?
+									Do you want to log out?
 								</p>
 								<div className="flex items-center gap-4 text-white text-xs justify-center mt-5">
 									<button
