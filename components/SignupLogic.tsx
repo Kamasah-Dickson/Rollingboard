@@ -21,6 +21,7 @@ export type Inputs = {
 	name: string;
 	description: string;
 	projectName: string;
+	taskName: string;
 };
 
 const SignupLogic = () => {
