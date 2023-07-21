@@ -28,31 +28,26 @@ const Projects = () => {
 		color: "",
 	});
 
-	const {
-		showModal,
-		setShowModal,
-		setmodalType,
-		modalType,
-		userAuth,
-		setUserAuth,
-	} = useContext(modalContext);
+	const { showModal, setShowModal, setmodalType, modalType } =
+		useContext(modalContext);
 
 	const [projectData, setProjectData] = useState<Iproject[]>([]);
-	//fetch the data from firebase here and pass it as props to the project component
-	if (auth.currentUser?.uid) {
-		setUserAuth(auth.currentUser.uid);
-	}
+
 	useEffect(() => {
-		if (userAuth) {
-			const dbRef = ref(database, "projects/" + userAuth);
-			onValue(dbRef, (snapshot) => {
-				const data = snapshot.val();
-				if (data) {
-					setProjectData(data);
-				}
-			});
-		}
-	}, [userAuth, setUserAuth]);
+		const unsubscribe = auth.onAuthStateChanged((user) => {
+			if (user) {
+				const dbRef = ref(database, "projects/" + user.uid);
+				onValue(dbRef, (snapshot) => {
+					const data = snapshot.val();
+					if (data) {
+						setProjectData(data);
+					}
+				});
+			}
+		});
+
+		return () => unsubscribe();
+	}, []);
 
 	const handleClose = (key: string) => {
 		setProjectID(key);
