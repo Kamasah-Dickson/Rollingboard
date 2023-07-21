@@ -14,7 +14,6 @@ export interface IDefault {
 	uid: string;
 	projectName: string;
 	description: string;
-	tasks: { backlog: string[]; todo: string[]; finished: string[] }[];
 	color: string;
 }
 
@@ -24,7 +23,6 @@ const Projects = () => {
 		uid: "",
 		projectName: "",
 		description: "",
-		tasks: [{ backlog: [], todo: [], finished: [] }],
 		color: "",
 	});
 
