@@ -11,10 +11,8 @@ import {
 interface Imodal {
 	showModal: boolean;
 	modalType: string;
-	userAuth: string;
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	setmodalType: Dispatch<SetStateAction<string>>;
-	setUserAuth: Dispatch<SetStateAction<string>>;
 }
 
 export const modalContext = createContext<Imodal>({
@@ -22,14 +20,11 @@ export const modalContext = createContext<Imodal>({
 	modalType: "",
 	setShowModal: () => {},
 	setmodalType: () => {},
-	setUserAuth: () => {},
-	userAuth: "",
 });
 
 const AppContext = ({ children }: { children: ReactElement }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalType, setmodalType] = useState("");
-	const [userAuth, setUserAuth] = useState("");
 
 	return (
 		<modalContext.Provider
@@ -37,8 +32,6 @@ const AppContext = ({ children }: { children: ReactElement }) => {
 				showModal,
 				setShowModal,
 				modalType,
-				userAuth,
-				setUserAuth,
 				setmodalType,
 			}}
 		>
