@@ -15,6 +15,7 @@ import NewProject from "./NewProject";
 import { ref, remove, set, update } from "firebase/database";
 import { IDefault } from "./Projects";
 import { Iproject } from "@/interface/interface";
+import NewTask from "./NewTask";
 interface Imodal {
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	setProjectData?: Dispatch<SetStateAction<Iproject[]>>;
@@ -152,6 +153,9 @@ const Modal = ({
 				console.log(error);
 			}
 			setShowModal(false);
+		} else if (modalType === "newTask") {
+			console.log(data);
+			/// create task here
 		} else {
 			try {
 				const credential = EmailAuthProvider.credential(
@@ -346,10 +350,10 @@ const Modal = ({
 								</label>
 
 								<label
-									className="text-[#555555] text-sm flex flex-col"
+									className="text-[#555555] mt-2 text-sm flex flex-col"
 									htmlFor="description"
 								>
-									Name
+									Description
 									<textarea
 										className="bg-transparent resize-none p-2 my-1 text-white text-md mt-1 border border-[#909296] rounded-md focus:border-white"
 										name="desctiption"
@@ -418,9 +422,15 @@ const Modal = ({
 									</button>
 								</div>
 							</>
+						) : modalType === "newProject" ? (
+							<NewProject
+								errors={errors}
+								isSubmitting={isSubmitting}
+								register={register}
+							/>
 						) : (
-							modalType === "newProject" && (
-								<NewProject
+							modalType === "newTask" && (
+								<NewTask
 									errors={errors}
 									isSubmitting={isSubmitting}
 									register={register}
