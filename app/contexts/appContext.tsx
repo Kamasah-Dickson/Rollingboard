@@ -1,30 +1,31 @@
 "use client";
 
-import {
-	ReactElement,
-	createContext,
-	Dispatch,
-	SetStateAction,
-	useState,
-} from "react";
-
-interface Imodal {
-	showModal: boolean;
-	modalType: string;
-	setShowModal: Dispatch<SetStateAction<boolean>>;
-	setmodalType: Dispatch<SetStateAction<string>>;
-}
+import { Icolumn, Imodal, Itask } from "@/interface/interface";
+import { ReactElement, createContext, useState } from "react";
 
 export const modalContext = createContext<Imodal>({
 	showModal: false,
 	modalType: "",
+	columnName: {
+		column: "",
+		uid: "",
+	},
+	tasks: [],
+	setTasks: () => {},
 	setShowModal: () => {},
 	setmodalType: () => {},
+	setColumnName: () => {},
 });
 
 const AppContext = ({ children }: { children: ReactElement }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalType, setmodalType] = useState("");
+	const [tasks, setTasks] = useState<Itask[]>([]);
+
+	const [columnName, setColumnName] = useState<Icolumn>({
+		column: "",
+		uid: "",
+	});
 
 	return (
 		<modalContext.Provider
@@ -33,6 +34,10 @@ const AppContext = ({ children }: { children: ReactElement }) => {
 				setShowModal,
 				modalType,
 				setmodalType,
+				columnName,
+				setColumnName,
+				setTasks,
+				tasks,
 			}}
 		>
 			{children}
