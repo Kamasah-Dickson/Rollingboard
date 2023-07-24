@@ -8,14 +8,7 @@ import Modal from "./Modal";
 import Link from "next/link";
 import { auth, database } from "@/configs/firebase";
 import { onValue, ref } from "firebase/database";
-import { Iproject } from "@/interface/interface";
-
-export interface IDefault {
-	uid: string;
-	projectName: string;
-	description: string;
-	color: string;
-}
+import { IDefault, Iproject } from "@/interface/interface";
 
 const Projects = () => {
 	const [projectID, setProjectID] = useState("");
@@ -88,8 +81,6 @@ const Projects = () => {
 		setProjectdefaultValues(project);
 	};
 
-	// console.log(projectData);
-
 	return (
 		<>
 			<div className="flex items-center max-w-lg mx-auto sm:max-w-full justify-between flex-col sm:flex-row gap-5">
@@ -137,7 +128,7 @@ const Projects = () => {
 								</div>
 								<div className="flex my-7 items-center gap-5 justify-center">
 									<Link
-										href={`/rollingboard/${key}`}
+										href={`/rollingboard/${key}?uid=${key}`}
 										type="button"
 										className="active:scale-[1.03] text-white bg-[#47454580] p-2 text-sm rounded-sm"
 									>
