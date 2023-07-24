@@ -13,9 +13,9 @@ import {
 import { toast } from "react-toastify";
 import NewProject from "./NewProject";
 import { ref, remove, set, update } from "firebase/database";
-import { IDefault } from "./Projects";
-import { Iproject } from "@/interface/interface";
+import { IDefault, Iproject } from "@/interface/interface";
 import NewTask from "./NewTask";
+import RemoveTask from "./RemoveTask";
 interface Imodal {
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	setProjectData?: Dispatch<SetStateAction<Iproject[]>>;
@@ -156,6 +156,8 @@ const Modal = ({
 		} else if (modalType === "newTask") {
 			console.log(data);
 			/// create task here
+		} else if (modalType === "taskRemove") {
+			// remove task here
 		} else {
 			try {
 				const credential = EmailAuthProvider.credential(
@@ -428,13 +430,15 @@ const Modal = ({
 								isSubmitting={isSubmitting}
 								register={register}
 							/>
+						) : modalType === "newTask" ? (
+							<NewTask
+								errors={errors}
+								isSubmitting={isSubmitting}
+								register={register}
+							/>
 						) : (
-							modalType === "newTask" && (
-								<NewTask
-									errors={errors}
-									isSubmitting={isSubmitting}
-									register={register}
-								/>
+							modalType === "taskRemove" && (
+								<RemoveTask setShowModal={setShowModal} />
 							)
 						)}
 					</form>
