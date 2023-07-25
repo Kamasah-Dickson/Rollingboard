@@ -1,7 +1,7 @@
 import { MdClose } from "react-icons/md";
 import { Dispatch, SetStateAction } from "react";
 import { auth, database } from "@/configs/firebase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Inputs } from "./SignupLogic";
 import uuid from "react-uuid";
@@ -22,6 +22,7 @@ interface Imodal {
 	setProjectdefaultValues?: Dispatch<SetStateAction<IDefault>>;
 	modalType: string;
 	projectID?: string;
+	childTaskID?: string;
 	projectData?: Iproject[];
 	projectDefaultValues?: IDefault;
 }
@@ -34,6 +35,7 @@ const Modal = ({
 	projectData,
 	projectDefaultValues,
 	setProjectdefaultValues,
+	childTaskID,
 }: Imodal) => {
 	const {
 		handleSubmit,
@@ -51,6 +53,8 @@ const Modal = ({
 
 	const router = useRouter();
 	const isOffline = !navigator.onLine;
+	const searchParams = useSearchParams();
+	const searchParamsID = searchParams.get("uid");
 
 	const handleModalContentClick = (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -154,10 +158,40 @@ const Modal = ({
 			}
 			setShowModal(false);
 		} else if (modalType === "newTask") {
-			console.log(data);
-			/// create task here
-		} else if (modalType === "taskRemove") {
-			// remove task here
+			const uid = uuid();
+
+			set(
+				ref(
+					database,
+					"projects/" +
+						auth.currentUser?.uid +
+						"/" +
+						searchParamsID +
+						"/tasks/ " +
+						childTaskID +
+						"/children/" +
+						uid
+				),
+
+				{
+					uid,
+					parentID: childTaskID,
+					task: data.taskName,
+					description: data.description,
+				}
+			)
+				.then(() => {
+					setShowModal(false);
+					toast.success("New task has been created", {
+						position: toast.POSITION.TOP_CENTER,
+					});
+				})
+				.catch((error) => {
+					console.log(error);
+					toast.error("An error occured", {
+						position: toast.POSITION.TOP_CENTER,
+					});
+				});
 		} else {
 			try {
 				const credential = EmailAuthProvider.credential(
@@ -224,7 +258,7 @@ const Modal = ({
 		<>
 			<div
 				onClick={() => setShowModal(false)}
-				className="modal overflow-y-scroll px-4 z-50 absolute top-0 flex flex-col justify-center left-0 w-full h-screen bg-[rgba(5,5,5,0.56)]"
+				className="modal overflow-y-scroll px-4 z-50 absolute top-0 flex flex-col justify-center left-0 w-full h-screen bg-[rgba(5,5,5,0.79)]"
 			>
 				<div
 					onClick={handleModalContentClick}
