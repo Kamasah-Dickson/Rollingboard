@@ -217,7 +217,7 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 								</div>
 								<p className="ml-2 mt-3">{project.description}</p>
 							</div>
-							<div className="flex mt-7 flex-wrap items-start gap-5">
+							<div className="flex my-7 flex-wrap items-start gap-5">
 								{tasks.map((task) => {
 									return (
 										<div
