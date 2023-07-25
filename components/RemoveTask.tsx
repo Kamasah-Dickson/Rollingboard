@@ -34,6 +34,7 @@ const RemoveTask = ({
 				console.error("Error removing data:", error);
 				setShowModal(false);
 			});
+		setShowModal(false);
 
 		const newFilteredTasks = tasks.filter(
 			(task) => task.uid !== columnName.uid
