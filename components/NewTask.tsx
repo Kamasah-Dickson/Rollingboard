@@ -14,7 +14,7 @@ const NewTask = ({ register, isSubmitting, errors }: IProject) => {
 
 	return (
 		<>
-			<h3 className="text-white text-xl mb-5">New Task</h3>
+			<h3 className="text-white text-2xl font-medium mb-5">New Task</h3>
 			<label
 				className="text-[#555555] text-sm flex mb-3 flex-col"
 				htmlFor="name"
@@ -43,7 +43,7 @@ const NewTask = ({ register, isSubmitting, errors }: IProject) => {
 			<label htmlFor="description" className="text-[#555555]">
 				Description
 				<textarea
-					id="Description"
+					id="description"
 					required={true}
 					disabled={isSubmitting}
 					{...register("description", {
@@ -57,6 +57,26 @@ const NewTask = ({ register, isSubmitting, errors }: IProject) => {
 					{errors.description?.message}
 				</p>
 			)}
+
+			{/* //TODO: assign project to team members */}
+
+			<label title="new feature" htmlFor="assign" className="text-[#555555]">
+				Assigned to
+				<input
+					id="assign"
+					// required={true}
+					disabled={true}
+					// {...register("description", {
+					// 	required: "description is required",
+					// })}
+					className="bg-transparent disabled:border-[#8080803d] resize-none p-2 w-full text-sm my-1 text-white text-md border border-[#909296b2] rounded-md focus:border-white"
+				></input>
+			</label>
+			{/* {errors.description && (
+				<p className="text-sm text-[crimson]" role="alert">
+					{errors.description?.message}
+				</p>
+			)} */}
 
 			<div className="flex items-center justify-center gap-5">
 				<button
