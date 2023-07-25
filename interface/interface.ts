@@ -22,6 +22,10 @@ export interface IDefault {
 export interface Itask {
 	uid: string;
 	taskName: string;
+	children: {
+		uid: string;
+		task: string;
+	}[];
 }
 
 export interface Imodal {
@@ -32,9 +36,11 @@ export interface Imodal {
 		column: string;
 		uid: string;
 	};
+	childTaskID: string;
 	setShowModal: Dispatch<SetStateAction<boolean>>;
 	setmodalType: Dispatch<SetStateAction<string>>;
 	setTasks: Dispatch<SetStateAction<Itask[]>>;
+	setChildTaskID: Dispatch<SetStateAction<string>>;
 	setColumnName: Dispatch<
 		SetStateAction<{
 			column: string;
@@ -46,4 +52,11 @@ export interface Imodal {
 export interface Icolumn {
 	column: string;
 	uid: string;
+}
+
+export interface IChildTask {
+	uid: string;
+	parentID: string;
+	description: string;
+	task: string;
 }
