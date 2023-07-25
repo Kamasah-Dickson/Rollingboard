@@ -33,15 +33,12 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 		setColumnName,
 		tasks,
 		setTasks,
+		setChildTaskID,
+		childTaskID,
 	} = useContext(modalContext);
 
 	const [showInput, setShowInput] = useState(false);
 	const [inputValue, setInputValue] = useState("");
-
-	const handleNewTask = () => {
-		setmodalType("newTask");
-		setShowModal(true);
-	};
 
 	const [currentProject, setCurrentProject] = useState<Iproject[]>([
 		{
@@ -191,9 +188,15 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 		}
 	};
 
+	const handleNewTask = (taskID: string) => {
+		setmodalType("newTask");
+		setShowModal(true);
+		setChildTaskID(taskID);
+	};
+
 	return (
 		<div className="h-screen flex flex-col">
-			<main className="mt-32 my-max flex-1">
+			<main className="my-32 my-max flex-1">
 				{currentProject.map((project: Iproject) => {
 					return (
 						<>
@@ -230,7 +233,7 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 														onChange={(e) => handleTaskNameChange(e)}
 														placeholder="Enter task name"
 														onBlur={() => setTheEditingTaskID(null)}
-														className="text-white bg-transparent border p-1 outline-none border-[#80808041]"
+														className="text-white w-full bg-transparent border p-1 outline-none border-[#80808041]"
 														onKeyDown={(e) =>
 															handleTaskNameKeyDown(e, task.uid)
 														}
@@ -257,7 +260,23 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 													cursor={"pointer"}
 												/>
 											</span>
-											<span className=" cursor-pointer flex items-center gap-3 mt-3">
+											<ul className="flex flex-col mt-3 gap-3">
+												{task.children &&
+													Object.values(task.children)?.map((childTask) => {
+														return (
+															<li
+																key={childTask.uid}
+																className=" cursor-pointer rounded-md p-3 bg-[#25262B]"
+															>
+																{childTask.task}
+															</li>
+														);
+													})}
+											</ul>
+											<span
+												onClick={() => handleNewTask(task.uid)}
+												className=" cursor-pointer text-md flex items-center gap-2 mt-3"
+											>
 												<AiOutlinePlus color="white" size={20} />
 												Add task
 											</span>
@@ -292,7 +311,13 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 					);
 				})}
 			</main>
-			{showModal && <Modal setShowModal={setShowModal} modalType={modalType} />}
+			{showModal && (
+				<Modal
+					childTaskID={childTaskID}
+					setShowModal={setShowModal}
+					modalType={modalType}
+				/>
+			)}
 		</div>
 	);
 };
