@@ -10,17 +10,20 @@ export const modalContext = createContext<Imodal>({
 		column: "",
 		uid: "",
 	},
+	childTaskID: "",
 	tasks: [],
 	setTasks: () => {},
 	setShowModal: () => {},
 	setmodalType: () => {},
 	setColumnName: () => {},
+	setChildTaskID: () => {},
 });
 
 const AppContext = ({ children }: { children: ReactElement }) => {
 	const [showModal, setShowModal] = useState(false);
 	const [modalType, setmodalType] = useState("");
 	const [tasks, setTasks] = useState<Itask[]>([]);
+	const [childTaskID, setChildTaskID] = useState("");
 
 	const [columnName, setColumnName] = useState<Icolumn>({
 		column: "",
@@ -36,6 +39,8 @@ const AppContext = ({ children }: { children: ReactElement }) => {
 				setmodalType,
 				columnName,
 				setColumnName,
+				childTaskID,
+				setChildTaskID,
 				setTasks,
 				tasks,
 			}}
