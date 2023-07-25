@@ -1,4 +1,3 @@
-import Footer from "@/components/Footer";
 import AppContext from "@/app/contexts/appContext";
 import Tasks from "@/components/Tasks";
 import { Metadata } from "next";
@@ -15,7 +14,6 @@ const SingleProject = ({ params }: { params: { project: string } }) => {
 					<Tasks params={params} />;
 				</>
 			</AppContext>
-			<Footer />
 		</>
 	);
 };
