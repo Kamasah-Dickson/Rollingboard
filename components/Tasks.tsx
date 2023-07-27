@@ -245,6 +245,9 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 		setShowModal(true);
 		setChildTaskID(taskID);
 	};
+
+	//TODO:fix the drag and drop functionality
+
 	const handleDrop = (
 		fromIndex: number,
 		toIndex: number,
