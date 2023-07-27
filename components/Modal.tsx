@@ -257,7 +257,7 @@ const Modal = ({
 		<>
 			<div
 				onClick={() => setShowModal(false)}
-				className="modal px-4 z-50 fixed top-0 flex flex-col justify-center left-0 w-full h-screen bg-[rgba(5,5,5,0.79)]"
+				className="modal px-4 z-50 fixed top-0 flex flex-col justify-center left-0 w-full h-screen bg-[rgba(5,5,5,0.59)]"
 			>
 				<div
 					onClick={handleModalContentClick}
