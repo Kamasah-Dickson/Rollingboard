@@ -53,10 +53,3 @@ export interface Icolumn {
 	column: string;
 	uid: string;
 }
-
-export interface IChildTask {
-	uid: string;
-	parentID: string;
-	description: string;
-	task: string;
-}
