@@ -66,68 +66,67 @@ const Header = () => {
 					} my-trans-visible fixed right-0 top-0  h-screen w-full select-none bg-gradient-to-r from-[#000000d8]  md:hidden`}
 				></div>
 
-				{currentUser && (
-					<ul
-						className={` ${
-							showNav
-								? " translate-x-[0%] "
-								: " translate-x-[100%] md:translate-x-[0%] "
-						}  my-trans text-md text-md absolute   right-0 top-0 z-20 flex  h-screen w-[70%] flex-col items-center ${
-							currentUser ? "justify-center md:justify-end" : "justify-center"
-						} gap-5 bg-[#000000] p-2 text-[#909296] md:relative md:h-full md:flex-row md:bg-transparent`}
-					>
-						<MdClose
-							color="white"
-							size={25}
-							onClick={() => setShowNav(false)}
-							className={`${
-								!showNav && "hidden"
-							} absolute right-5 top-5 cursor-pointer md:hidden`}
-						/>
-						<li>
-							<Link
-								className="transition-all hover:text-white"
-								href={"/rollingboard"}
-							>
-								Projects
-							</Link>
-						</li>
-						<li
-							className="transition-all hover:text-white cursor-pointer"
-							onClick={() => (setmodalType("signout"), setShowModal(true))}
-						>
-							Signout
-						</li>
-						<li className="" title="profile">
-							<CgProfile
-								cursor={"pointer"}
-								className="text-[#909296] hover:text-white"
-								size={25}
-								onClick={() => setShowProfile(true)}
-							/>
-						</li>
-
-						{!currentUser && (
+				<ul
+					className={` ${
+						showNav
+							? " translate-x-[0%] "
+							: " translate-x-[100%] md:translate-x-[0%] "
+					}  my-trans text-md text-md absolute   right-0 top-0 z-20 flex  h-screen w-[70%] flex-col items-center ${
+						currentUser ? "justify-center md:justify-end" : "justify-center"
+					} gap-5 bg-[#000000] p-2 text-[#909296] md:relative md:h-full md:flex-row md:bg-transparent`}
+				>
+					<MdClose
+						color="white"
+						size={25}
+						onClick={() => setShowNav(false)}
+						className={`${
+							!showNav && "hidden"
+						} absolute right-5 top-5 cursor-pointer md:hidden`}
+					/>
+					{currentUser ? (
+						<>
 							<li>
-								<div className="flex flex-col items-center justify-center gap-5 md:hidden">
-									<Link
-										href={"/login"}
-										className="cursor-pointer hover:text-white"
-									>
-										Login
-									</Link>
-									<Link
-										href={"/signup"}
-										className="mt-3 cursor-pointer rounded-md bg-white px-4 py-1 text-black transition-all hover:bg-[#8010adec] hover:text-white active:scale-[1.02]"
-									>
-										Signup
-									</Link>
-								</div>
+								<Link
+									className="transition-all hover:text-white"
+									href={"/rollingboard"}
+								>
+									Projects
+								</Link>
 							</li>
-						)}
-					</ul>
-				)}
-
+							<li
+								className="transition-all hover:text-white cursor-pointer"
+								onClick={() => (setmodalType("signout"), setShowModal(true))}
+							>
+								Signout
+							</li>
+							<li className="" title="profile">
+								<CgProfile
+									cursor={"pointer"}
+									className="text-[#909296] hover:text-white"
+									size={25}
+									onClick={() => setShowProfile(true)}
+								/>
+							</li>
+						</>
+					) : (
+						<li>
+							<div className="flex flex-col items-center justify-center gap-5 md:hidden">
+								<Link
+									href={"/login"}
+									className="cursor-pointer hover:text-white"
+								>
+									Login
+								</Link>
+								<Link
+									href={"/signup"}
+									className="mt-3 cursor-pointer rounded-md bg-white px-4 py-1 text-black transition-all hover:bg-[#8010adec] hover:text-white active:scale-[1.02]"
+								>
+									Signup
+								</Link>
+							</div>
+						</li>
+					)}
+				</ul>
 				{!currentUser && (
 					<div className="hidden items-center justify-center gap-5 md:flex">
 						<Link href={"/login"} className="cursor-pointer text-white">
