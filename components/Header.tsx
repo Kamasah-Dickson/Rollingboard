@@ -107,22 +107,24 @@ const Header = () => {
 							/>
 						</li>
 
-						<li>
-							<div className="flex flex-col items-center justify-center gap-5 md:hidden">
-								<Link
-									href={"/login"}
-									className="cursor-pointer hover:text-white"
-								>
-									Login
-								</Link>
-								<Link
-									href={"/signup"}
-									className="mt-3 cursor-pointer rounded-md bg-white px-4 py-1 text-black transition-all hover:bg-[#8010adec] hover:text-white active:scale-[1.02]"
-								>
-									Signup
-								</Link>
-							</div>
-						</li>
+						{!currentUser && (
+							<li>
+								<div className="flex flex-col items-center justify-center gap-5 md:hidden">
+									<Link
+										href={"/login"}
+										className="cursor-pointer hover:text-white"
+									>
+										Login
+									</Link>
+									<Link
+										href={"/signup"}
+										className="mt-3 cursor-pointer rounded-md bg-white px-4 py-1 text-black transition-all hover:bg-[#8010adec] hover:text-white active:scale-[1.02]"
+									>
+										Signup
+									</Link>
+								</div>
+							</li>
+						)}
 					</ul>
 				)}
 
