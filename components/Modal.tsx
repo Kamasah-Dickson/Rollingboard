@@ -175,7 +175,6 @@ const Modal = ({
 
 				{
 					uid,
-					parentID: childTaskID,
 					task: data.taskName,
 					description: data.description,
 				}
