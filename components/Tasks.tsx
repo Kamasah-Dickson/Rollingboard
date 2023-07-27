@@ -303,7 +303,7 @@ const Tasks = ({ params }: { params: { project: string } }) => {
 					updates[uid] = { ...task, children };
 				});
 
-				update(databaseRef, updates);
+				// update(databaseRef, updates);
 				setTasks(Object.values(updates));
 			}
 		}
